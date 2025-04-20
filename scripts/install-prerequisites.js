@@ -63,15 +63,6 @@ function setEnvironmentVariables() {
     }
 }
 
-function checkDependencies() {
-    console.log('Checking dependencies...');
-    try {
-        execSync('npm ci --production', { stdio: 'inherit' });
-    } catch (error) {
-        throw new Error('Failed to install dependencies');
-    }
-}
-
 function compareVersions(a, b) {
     const partsA = a.split('.').map(Number);
     const partsB = b.split('.').map(Number);
@@ -97,9 +88,6 @@ function main() {
         
         // Set environment variables
         setEnvironmentVariables();
-        
-        // Install dependencies
-        checkDependencies();
         
         console.log('All prerequisites are satisfied!');
         process.exit(0);

@@ -27,7 +27,7 @@
     "@heroicons/react": "^2.1.1",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
-    "better-sqlite3": "^9.4.3",
+    "better-sqlite3": "^8.7.0",
     "chart.js": "^4.4.1",
     "compression": "^1.7.4",
     "countries-and-timezones": "^2.0.0",
@@ -101,12 +101,9 @@
       "buildResources": "build"
     },
     "files": [
-      "src/**/*",
-      "node_modules/**/*",
-      "package.json",
-      "scripts/**/*",
-      "docs/**/*",
-      "build/**/*"
+      "dist/**/*",
+      "main.js",
+      "package.json"
     ],
     "extraResources": [
       {
@@ -162,7 +159,6 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Home Budget Manager",
-      "include": "build/installer.nsh",
       "perMachine": true,
       "allowElevation": true
     }
