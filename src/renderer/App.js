@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -18,24 +18,22 @@ import AIAdvisor from './pages/AIAdvisor';
 
 const App = () => {
   return (
-    <Router>
-      <div className="flex h-screen bg-gray-100">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/accounts" element={<Accounts />} />
-              <Route path="/investments" element={<Investments />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/ai-advisor" element={<AIAdvisor />} />
-              <Route path="/settings/*" element={<Settings />} />
-            </Routes>
-          </main>
-        </div>
+    <div className="flex h-screen bg-gray-100">
+      <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/accounts" element={<Accounts />} />
+            <Route path="/investments" element={<Investments />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/ai-advisor" element={<AIAdvisor />} />
+            <Route path="/settings/*" element={<Settings />} />
+          </Routes>
+        </main>
       </div>
       <ToastContainer
         position="bottom-right"
@@ -48,7 +46,7 @@ const App = () => {
         draggable
         pauseOnHover
       />
-    </Router>
+    </div>
   );
 };
 
