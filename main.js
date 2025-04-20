@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
+const isDev = process.env.NODE_ENV === 'development';
 
 let mainWindow;
 const localApi = express();
@@ -125,17 +126,22 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      enableRemoteModule: true
     }
   });
 
   // Load the index.html file
   mainWindow.loadFile('dist/index.html');
 
-  // Open DevTools in development
-  if (process.env.NODE_ENV === 'development') {
+  // Open DevTools in development mode
+  if (isDev) {
     mainWindow.webContents.openDevTools();
   }
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
 }
 
 app.whenReady().then(() => {
@@ -143,7 +149,7 @@ app.whenReady().then(() => {
   createWindow();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    if (mainWindow === null) {
       createWindow();
     }
   });
@@ -173,4 +179,20 @@ localApi.get('/api/accounts', (req, res) => {
 const PORT = 3000;
 localApi.listen(PORT, () => {
   console.log(`Local API server running on port ${PORT}`);
+});
+
+// Handle IPC messages
+ipcMain.handle('auth:get-current-user', async () => {
+  // TODO: Implement user authentication
+  return null;
+});
+
+ipcMain.handle('auth:login', async (event, credentials) => {
+  // TODO: Implement login
+  return null;
+});
+
+ipcMain.handle('auth:logout', async () => {
+  // TODO: Implement logout
+  return true;
 }); 
