@@ -15,7 +15,7 @@ function initializeDatabase() {
     const dbPath = path.join(app.getPath('userData'), 'budget.db');
     console.log('Database path:', dbPath);
     
-    db = new Database(dbPath);
+    db = new Database(dbPath, { verbose: console.log });
     
     // Enable foreign keys
     db.pragma('foreign_keys = ON');
@@ -146,10 +146,13 @@ function createWindow() {
   });
 
   // Load the index.html file
-  if (isDev) {
-    mainWindow.loadFile('dist/index.html');
-  } else {
-    mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
+  const indexPath = path.join(__dirname, 'dist', 'index.html');
+  try {
+    mainWindow.loadFile(indexPath);
+  } catch (error) {
+    console.error('Error loading index.html:', error);
+    console.error('Attempted path:', indexPath);
+    app.quit();
   }
 
   // Open DevTools in development mode
