@@ -135,7 +135,11 @@ function createWindow() {
   });
 
   // Load the index.html file
-  mainWindow.loadFile('dist/index.html');
+  if (isDev) {
+    mainWindow.loadFile('dist/index.html');
+  } else {
+    mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
+  }
 
   // Open DevTools in development mode
   if (isDev) {
@@ -178,7 +182,7 @@ localApi.get('/api/accounts', (req, res) => {
 });
 
 // Start local API server
-const PORT = 3000;
+const PORT = 3001;
 localApi.listen(PORT, () => {
   console.log(`Local API server running on port ${PORT}`);
 });
