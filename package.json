@@ -32,7 +32,7 @@
     "compression": "^1.7.4",
     "countries-and-timezones": "^2.0.0",
     "crypto-js": "^4.2.0",
-    "date-fns": "^3.3.1",
+    "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "decimal.js": "^10.4.3",
     "electron-log": "^5.1.1",
