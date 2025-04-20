@@ -32,7 +32,7 @@ function initializeDatabase() {
     name TEXT NOT NULL,
     type TEXT,
     issuer TEXT,
-    limit REAL,
+    "limit" REAL,
     last_four_digits TEXT,
     billing_day INTEGER,
     bank_account_id INTEGER,

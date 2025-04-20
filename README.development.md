@@ -111,4 +111,48 @@ This branch is for development purposes only. It may contain:
 
 For development-related questions:
 - Email: dev@homebudgetmanager.com
-- Slack: #development channel 
+- Slack: #development channel
+
+# Branch Strategy
+
+Our repository follows a three-branch strategy:
+
+- `production`: Stable, released versions only. All code here must be production-ready and tested.
+- `main`: Integration/staging branch. Features are merged here before being promoted to production.
+- `develop`: Active development branch. All new features and fixes start here.
+
+## Release Process
+
+1. Development
+   - New features are developed in feature branches from `develop`
+   - Feature branches are merged back to `develop` via pull requests
+
+2. Integration
+   - When features are ready, `develop` is merged into `main`
+   - Testing and QA is performed on `main`
+
+3. Production Release
+   - After successful testing, `main` is merged into `production`
+   - Tags are created for each production release
+   - Installers are built from the `production` branch
+
+## Contributing
+
+1. Create feature branch from `develop`:
+   ```bash
+   git checkout develop
+   git checkout -b feature/your-feature-name
+   ```
+
+2. Make your changes and commit:
+   ```bash
+   git add .
+   git commit -m "Description of changes"
+   ```
+
+3. Push and create pull request to `develop`:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+4. After review and approval, your changes will be merged to `develop` 
