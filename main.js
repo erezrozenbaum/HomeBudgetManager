@@ -145,8 +145,8 @@ function createWindow() {
     }
   });
 
-  // Load the index.html file
-  const indexPath = path.join(__dirname, 'dist', 'index.html');
+  // Load the index.html file from src/renderer instead of dist
+  const indexPath = path.join(__dirname, 'src', 'renderer', 'index.html');
   try {
     mainWindow.loadFile(indexPath);
   } catch (error) {
