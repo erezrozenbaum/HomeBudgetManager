@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { DocumentArrowUpIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
 export default function TransactionImport({ isOpen, onClose }) {
   const [file, setFile] = useState(null);
@@ -66,65 +66,70 @@ export default function TransactionImport({ isOpen, onClose }) {
       setError(null);
       setSuccess(null);
 
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(worksheet);
-
-        const errors = [];
-        const validTransactions = [];
-
-        rows.forEach((row, index) => {
-          const rowErrors = validateTransaction(row, index);
-          if (rowErrors.length > 0) {
-            errors.push(...rowErrors);
-          } else {
-            validTransactions.push(row);
-          }
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(await file.arrayBuffer());
+      const worksheet = workbook.worksheets[0];
+      
+      const rows = [];
+      worksheet.eachRow({ includeEmpty: false, header: 1 }, (row, rowNumber) => {
+        if (rowNumber === 1) return; // Skip header row
+        const rowData = {};
+        row.eachCell((cell, colNumber) => {
+          const header = worksheet.getRow(1).getCell(colNumber).value;
+          rowData[header] = cell.value;
         });
+        rows.push(rowData);
+      });
 
-        if (errors.length > 0) {
-          setError(errors.join('\n'));
-          return;
+      const errors = [];
+      const validTransactions = [];
+
+      rows.forEach((row, index) => {
+        const rowErrors = validateTransaction(row, index);
+        if (rowErrors.length > 0) {
+          errors.push(...rowErrors);
+        } else {
+          validTransactions.push(row);
         }
+      });
 
-        // Group transactions by type
-        const groupedTransactions = {
-          regular: [],
-          recurring: [],
-          unplanned: [],
-          business: []
-        };
+      if (errors.length > 0) {
+        setError(errors.join('\n'));
+        return;
+      }
 
-        validTransactions.forEach(transaction => {
-          const type = transaction.type?.toLowerCase() || 'regular';
-          groupedTransactions[type].push(transaction);
-        });
-
-        // Import each type of transaction
-        for (const [type, transactions] of Object.entries(groupedTransactions)) {
-          if (transactions.length > 0) {
-            const response = await fetch(`/api/transactions/${type}`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(transactions),
-            });
-
-            if (!response.ok) {
-              throw new Error(`Failed to import ${type} transactions`);
-            }
-          }
-        }
-
-        setSuccess(`Successfully imported ${validTransactions.length} transactions`);
-        setFile(null);
+      // Group transactions by type
+      const groupedTransactions = {
+        regular: [],
+        recurring: [],
+        unplanned: [],
+        business: []
       };
 
-      reader.readAsArrayBuffer(file);
+      validTransactions.forEach(transaction => {
+        const type = transaction.type?.toLowerCase() || 'regular';
+        groupedTransactions[type].push(transaction);
+      });
+
+      // Import each type of transaction
+      for (const [type, transactions] of Object.entries(groupedTransactions)) {
+        if (transactions.length > 0) {
+          const response = await fetch(`/api/transactions/${type}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(transactions),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to import ${type} transactions`);
+          }
+        }
+      }
+
+      setSuccess(`Successfully imported ${validTransactions.length} transactions`);
+      setFile(null);
     } catch (err) {
       setError(err.message);
     } finally {

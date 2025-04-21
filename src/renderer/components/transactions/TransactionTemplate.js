@@ -1,9 +1,9 @@
 import React from 'react';
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
 export default function TransactionTemplate() {
-  const downloadTemplate = () => {
+  const downloadTemplate = async () => {
     // Create sample data for each transaction type
     const sampleData = [
       // Regular transaction
@@ -62,38 +62,47 @@ export default function TransactionTemplate() {
       }
     ];
 
-    // Create worksheet
-    const ws = XLSX.utils.json_to_sheet(sampleData);
+    // Create workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Transactions');
+
+    // Add headers
+    const headers = Object.keys(sampleData.reduce((acc, curr) => {
+      Object.keys(curr).forEach(key => {
+        acc[key] = true;
+      });
+      return acc;
+    }, {}));
+    worksheet.addRow(headers);
+
+    // Add data
+    sampleData.forEach(data => {
+      const row = headers.map(header => {
+        const value = data[header];
+        if (Array.isArray(value)) {
+          return value.join(', ');
+        } else if (typeof value === 'object' && value !== null) {
+          return JSON.stringify(value);
+        }
+        return value;
+      });
+      worksheet.addRow(row);
+    });
 
     // Set column widths
-    const wscols = [
-      { wch: 10 }, // type
-      { wch: 12 }, // date
-      { wch: 10 }, // amount
-      { wch: 25 }, // description
-      { wch: 15 }, // category
-      { wch: 15 }, // subCategory
-      { wch: 15 }, // paymentMethod
-      { wch: 10 }, // frequency
-      { wch: 12 }, // startDate
-      { wch: 12 }, // endDate
-      { wch: 8 },  // isActive
-      { wch: 10 }, // impact
-      { wch: 15 }, // emergencyLevel
-      { wch: 20 }, // tags
-      { wch: 15 }, // business
-      { wch: 15 }, // transactionType
-      { wch: 10 }, // status
-      { wch: 20 }  // taxRelated
-    ];
-    ws['!cols'] = wscols;
-
-    // Create workbook
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Transactions');
+    worksheet.columns.forEach(column => {
+      column.width = 15;
+    });
 
     // Generate Excel file
-    XLSX.writeFile(wb, 'transaction_template.xlsx');
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'transaction_template.xlsx';
+    a.click();
+    window.URL.revokeObjectURL(url);
   };
 
   return (
