@@ -1,6 +1,6 @@
 {
   "name": "home-budget-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A comprehensive personal and family budget management application",
   "main": "main.js",
   "engines": {
