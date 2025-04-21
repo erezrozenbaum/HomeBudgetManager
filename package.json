@@ -98,71 +98,36 @@
     "appId": "com.homebudgetmanager.app",
     "productName": "Home Budget Manager",
     "copyright": "Copyright © 2024 Erez Rozenbaum",
-    "directories": {
-      "output": "dist",
-      "buildResources": "build"
-    },
+    "asar": true,
     "files": [
       "dist/**/*",
       "main.js",
       "package.json"
     ],
-    "extraResources": [
-      {
-        "from": "scripts/",
-        "to": "scripts",
-        "filter": [
-          "**/*"
-        ]
-      },
-      {
-        "from": "docs/",
-        "to": "docs",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ],
-    "asarUnpack": [
-      "node_modules/better-sqlite3/**/*",
-      "scripts/init-database.js",
-      "node_modules/bcrypt/**/*",
-      "node_modules/node-schedule/**/*",
-      "node_modules/nodemailer/**/*"
-    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "release"
+    },
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "build/icon.ico"
+      "target": "nsis",
+      "icon": "assets/icon.ico"
     },
     "mac": {
-      "target": [
-        "dmg"
-      ],
-      "icon": "build/icon.icns"
+      "target": "dmg",
+      "icon": "assets/icon.icns"
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ],
-      "icon": "build/icon.png",
-      "category": "Finance"
+      "target": "AppImage",
+      "icon": "assets/icon.png"
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "Home Budget Manager",
-      "perMachine": true,
-      "allowElevation": true
-    }
+    "npmRebuild": true,
+    "buildDependenciesFromSource": true,
+    "nodeGypRebuild": true,
+    "extraResources": [
+      {
+        "from": "node_modules/better-sqlite3/build/Release/better_sqlite3.node",
+        "to": "app.asar.unpacked/node_modules/better-sqlite3/build/Release/better_sqlite3.node"
+      }
+    ]
   }
 }
