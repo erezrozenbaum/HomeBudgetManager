@@ -14,8 +14,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "postinstall": "npm rebuild better-sqlite3 && electron-builder install-app-deps && node scripts/install-prerequisites.js",
-    "rebuild-sqlite3": "electron-rebuild -f -w better-sqlite3",
+    "postinstall": "electron-builder install-app-deps && node scripts/install-prerequisites.js",
     "prebuild:app": "npm run build",
     "build:app": "electron-builder",
     "build:win": "npm run build && electron-builder --win",
@@ -74,7 +73,6 @@
     "@babel/core": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@electron/asar": "^3.2.8",
-    "@electron/rebuild": "^3.7.2",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@types/jest": "^29.5.12",
@@ -103,7 +101,8 @@
     "files": [
       "dist/**/*",
       "main.js",
-      "package.json"
+      "package.json",
+      "node_modules/better-sqlite3/**/*"
     ],
     "directories": {
       "buildResources": "assets",
@@ -121,9 +120,9 @@
       "target": "AppImage",
       "icon": "assets/icon.png"
     },
-    "npmRebuild": true,
-    "buildDependenciesFromSource": true,
-    "nodeGypRebuild": true,
+    "npmRebuild": false,
+    "buildDependenciesFromSource": false,
+    "nodeGypRebuild": false,
     "extraResources": [
       {
         "from": "node_modules/better-sqlite3/build/Release/better_sqlite3.node",
