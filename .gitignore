@@ -9,6 +9,7 @@
 # Production
 /build
 /dist
+/release
 
 # Environment files
 .env
@@ -51,4 +52,4 @@ Thumbs.db
 
 # Temporary files
 *.tmp
-*.temp release/
+*.temp
