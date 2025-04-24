@@ -70,6 +70,7 @@
     "@types/jest": "^29.5.12",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
     "electron": "28.3.3",
     "electron-builder": "^24.13.3",
     "electron-icon-builder": "^2.0.1",

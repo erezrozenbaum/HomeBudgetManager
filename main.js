@@ -180,10 +180,7 @@ function createWindow() {
   });
 
   // Load the index.html file from the correct location
-  const htmlPath = isDev 
-    ? path.join(__dirname, 'src', 'renderer', 'index.html')
-    : path.join(__dirname, 'renderer', 'index.html');
-
+  const htmlPath = path.join(__dirname, 'src', 'renderer', 'index.html');
   console.log('Loading from path:', htmlPath);
   console.log('File exists:', fs.existsSync(htmlPath));
   console.log('Directory contents:', fs.readdirSync(path.dirname(htmlPath)));
