@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
     <title>My Budget Manager</title>
+    <script>
+        window.React = require('react');
+        window.ReactDOM = require('react-dom');
+        window.ReactRouterDOM = require('react-router-dom');
+    </script>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <div id="root"></div>
-    <script src="bundle.js"></script>
+    <script src="App.js"></script>
 </body>
 </html> 
