@@ -10,11 +10,11 @@
     "test:coverage": "jest --coverage",
     "postinstall": "node scripts/install-prerequisites.js",
     "generate-icons": "node scripts/generate-icons.js",
-    "build": "webpack && electron-builder",
-    "build:win": "webpack && electron-builder --win",
-    "build:mac": "webpack && electron-builder --mac",
-    "build:linux": "webpack && electron-builder --linux",
-    "build:all": "webpack && electron-builder -mwl"
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "build:all": "electron-builder -mwl"
   },
   "author": "Erez Rozenbaum",
   "license": "MIT",
