@@ -2,11 +2,43 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const express = require('express');
 const Database = require('better-sqlite3');
+const fs = require('fs');
 const isDev = process.env.NODE_ENV === 'development';
 
 let mainWindow;
 const localApi = express();
-const db = new Database('./budget.db');
+
+// Get the appropriate app data directory based on platform
+function getAppDataPath() {
+    switch (process.platform) {
+        case 'win32':
+            return path.join(process.env.APPDATA, 'HomeBudgetManager');
+        case 'darwin':
+            return path.join(process.env.HOME, 'Library', 'Application Support', 'HomeBudgetManager');
+        case 'linux':
+            return path.join(process.env.HOME, '.homeBudgetManager');
+        default:
+            throw new Error('Unsupported platform');
+    }
+}
+
+// Create database directory if it doesn't exist
+function createDatabaseDirectory() {
+    const dbDir = getAppDataPath();
+    if (!fs.existsSync(dbDir)) {
+        fs.mkdirSync(dbDir, { recursive: true });
+    }
+    return dbDir;
+}
+
+// Initialize database connection
+function initializeDatabaseConnection() {
+    const dbDir = createDatabaseDirectory();
+    const dbPath = path.join(dbDir, 'budget.db');
+    return new Database(dbPath);
+}
+
+const db = initializeDatabaseConnection();
 
 // Initialize database tables
 function initializeDatabase() {
