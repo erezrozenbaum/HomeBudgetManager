@@ -170,7 +170,7 @@ function createWindow() {
   if (isDev) {
     mainWindow.loadFile('src/renderer/index.html');
   } else {
-    mainWindow.loadFile(path.join(__dirname, 'src', 'renderer', 'index.html'));
+    mainWindow.loadFile(path.join(__dirname, 'dist', 'renderer', 'index.html'));
   }
 
   // Open DevTools in development mode
