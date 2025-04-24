@@ -14,5 +14,5 @@ function App() {
 // Make App available globally
 window.App = App;
 
-const domContainer = document.getElementById('root');
-ReactDOM.render(e(App), domContainer); 
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(e(App)); 
