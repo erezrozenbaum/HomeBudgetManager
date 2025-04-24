@@ -89,7 +89,9 @@
     "files": [
       "main.js",
       "package.json",
-      "src/**/*"
+      "src/**/*",
+      "build/**/*",
+      "node_modules/**/*"
     ],
     "extraResources": [
       {
