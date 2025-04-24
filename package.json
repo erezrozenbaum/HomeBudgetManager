@@ -97,9 +97,7 @@
         "from": "src/renderer",
         "to": "renderer",
         "filter": [
-          "*.html",
-          "*.css",
-          "*.js"
+          "**/*"
         ]
       }
     ],
