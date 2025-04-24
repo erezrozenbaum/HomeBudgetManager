@@ -1,16 +1,16 @@
 'use strict';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+const React = window.React;
+const ReactDOM = window.ReactDOM;
+const { BrowserRouter, Routes, Route } = window.ReactRouterDOM;
 
 // Import components
-import { Sidebar } from './components/Sidebar';
-import { MainContent } from './components/MainContent';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { LoadingSpinner } from './components/LoadingSpinner';
-import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
+const { Sidebar } = require('./components/Sidebar');
+const { MainContent } = require('./components/MainContent');
+const { ErrorBoundary } = require('./components/ErrorBoundary');
+const { LoadingSpinner } = require('./components/LoadingSpinner');
+const { AuthProvider } = require('./context/AuthContext');
+const { ThemeProvider } = require('./context/ThemeContext');
 
 function App() {
     const [isLoading, setIsLoading] = React.useState(true);
