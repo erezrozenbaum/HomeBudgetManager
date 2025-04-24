@@ -1,8 +1,8 @@
 'use strict';
 
-const React = window.React;
-const ReactDOM = window.ReactDOM;
-const { BrowserRouter, Routes, Route } = window.ReactRouterDOM;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Import components
 import { Sidebar } from './components/Sidebar';
