@@ -166,8 +166,12 @@ function createWindow() {
     }
   });
 
-  // Load the index.html file
-  mainWindow.loadFile('dist/index.html');
+  // Load the index.html file from the correct location
+  if (isDev) {
+    mainWindow.loadFile('src/renderer/index.html');
+  } else {
+    mainWindow.loadFile(path.join(__dirname, 'src', 'renderer', 'index.html'));
+  }
 
   // Open DevTools in development mode
   if (isDev) {
