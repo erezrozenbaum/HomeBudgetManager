@@ -156,47 +156,47 @@ function initializeDatabase() {
 }
 
 function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      enableRemoteModule: true,
-      webSecurity: true,
-      allowRunningInsecureContent: false
-    }
-  });
+    mainWindow = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+            webSecurity: true,
+            allowRunningInsecureContent: false
+        }
+    });
 
-  // Open DevTools by default for debugging
-  mainWindow.webContents.openDevTools();
+    // Open DevTools by default for debugging
+    mainWindow.webContents.openDevTools();
 
-  // Add error handling
-  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
-    console.error('Failed to load:', errorCode, errorDescription);
-  });
+    // Add error handling
+    mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+        console.error('Failed to load:', errorCode, errorDescription);
+    });
 
-  // Add console logging
-  mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-    console.log('Renderer Console:', {level, message, line, sourceId});
-  });
+    // Add console logging
+    mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+        console.log('Renderer Console:', {level, message, line, sourceId});
+    });
 
-  // Load the index.html file from the correct location
-  const htmlPath = isDev 
-    ? path.join(__dirname, 'src', 'renderer', 'index.html')
-    : path.join(__dirname, 'renderer', 'index.html');
-    
-  console.log('Loading from path:', htmlPath);
-  console.log('File exists:', fs.existsSync(htmlPath));
-  console.log('Directory contents:', fs.readdirSync(path.dirname(htmlPath)));
+    // Load the index.html file from the correct location
+    const htmlPath = isDev 
+        ? path.join(__dirname, 'src', 'renderer', 'index.html')
+        : path.join(__dirname, 'renderer', 'index.html');
+        
+    console.log('Loading from path:', htmlPath);
+    console.log('File exists:', fs.existsSync(htmlPath));
+    console.log('Directory contents:', fs.readdirSync(path.dirname(htmlPath)));
 
-  mainWindow.loadFile(htmlPath).catch(err => {
-    console.error('Failed to load file:', err);
-  });
+    mainWindow.loadFile(htmlPath).catch(err => {
+        console.error('Failed to load file:', err);
+    });
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    });
 }
 
 app.whenReady().then(() => {
