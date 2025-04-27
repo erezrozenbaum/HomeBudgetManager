@@ -124,132 +124,122 @@ const Goals = () => {
     };
   };
 
-  return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Goals & Savings</h1>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Add New Goal</h2>
-          <form onSubmit={handleAddGoal}>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Goal Name</label>
-                <input
-                  type="text"
-                  value={newGoal.name}
-                  onChange={(e) => setNewGoal({ ...newGoal, name: e.target.value })}
-                  className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  required
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Target Amount</label>
-                  <input
-                    type="number"
-                    value={newGoal.targetAmount}
-                    onChange={(e) => setNewGoal({ ...newGoal, targetAmount: e.target.value })}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Current Amount</label>
-                  <input
-                    type="number"
-                    value={newGoal.currentAmount}
-                    onChange={(e) => setNewGoal({ ...newGoal, currentAmount: e.target.value })}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    required
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Deadline</label>
-                  <input
-                    type="date"
-                    value={newGoal.deadline}
-                    onChange={(e) => setNewGoal({ ...newGoal, deadline: e.target.value })}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Category</label>
-                  <select
-                    value={newGoal.category}
-                    onChange={(e) => setNewGoal({ ...newGoal, category: e.target.value })}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    required
-                  >
-                    <option value="savings">Savings</option>
-                    <option value="investment">Investment</option>
-                    <option value="purchase">Purchase</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                Add Goal
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div className="space-y-6">
-          {goals.map((goal) => (
-            <div key={goal.id} className="bg-white rounded-lg shadow p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-lg font-medium">{goal.name}</h3>
-                  <p className="text-sm text-gray-500">
-                    Target: ${goal.targetAmount} | Current: ${goal.currentAmount}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Deadline: {new Date(goal.deadline).toLocaleDateString()}
-                  </p>
-                </div>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => handleDeleteGoal(goal.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-              <div className="h-48">
-                <Line data={getProgressData(goal)} />
-              </div>
-              <div className="mt-4">
-                <div className="flex items-center space-x-4">
-                  <input
-                    type="number"
-                    placeholder="Add amount"
-                    className="flex-1 border rounded px-3 py-2"
-                    onChange={(e) => handleUpdateProgress(goal.id, e.target.value)}
-                  />
-                  <button
-                    onClick={() => handleUpdateProgress(goal.id, 0)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  >
-                    Update Progress
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+  return React.createElement('div', { className: 'p-6' },
+    React.createElement('div', { className: 'flex justify-between items-center mb-6' },
+      React.createElement('h1', { className: 'text-2xl font-bold' }, 'Goals & Savings')
+    ),
+    React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-2 gap-6' },
+      React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+        React.createElement('h2', { className: 'text-lg font-semibold mb-4' }, 'Add New Goal'),
+        React.createElement('form', { onSubmit: handleAddGoal },
+          React.createElement('div', { className: 'space-y-4' },
+            React.createElement('div', null,
+              React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Goal Name'),
+              React.createElement('input', {
+                type: 'text',
+                value: newGoal.name,
+                onChange: (e) => setNewGoal({ ...newGoal, name: e.target.value }),
+                className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                required: true
+              })
+            ),
+            React.createElement('div', { className: 'grid grid-cols-2 gap-4' },
+              React.createElement('div', null,
+                React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Target Amount'),
+                React.createElement('input', {
+                  type: 'number',
+                  value: newGoal.targetAmount,
+                  onChange: (e) => setNewGoal({ ...newGoal, targetAmount: e.target.value }),
+                  className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                  required: true
+                })
+              ),
+              React.createElement('div', null,
+                React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Current Amount'),
+                React.createElement('input', {
+                  type: 'number',
+                  value: newGoal.currentAmount,
+                  onChange: (e) => setNewGoal({ ...newGoal, currentAmount: e.target.value }),
+                  className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                  required: true
+                })
+              )
+            ),
+            React.createElement('div', { className: 'grid grid-cols-2 gap-4' },
+              React.createElement('div', null,
+                React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Deadline'),
+                React.createElement('input', {
+                  type: 'date',
+                  value: newGoal.deadline,
+                  onChange: (e) => setNewGoal({ ...newGoal, deadline: e.target.value }),
+                  className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                  required: true
+                })
+              ),
+              React.createElement('div', null,
+                React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Category'),
+                React.createElement('select', {
+                  value: newGoal.category,
+                  onChange: (e) => setNewGoal({ ...newGoal, category: e.target.value }),
+                  className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                  required: true
+                },
+                  React.createElement('option', { value: 'savings' }, 'Savings'),
+                  React.createElement('option', { value: 'investment' }, 'Investment'),
+                  React.createElement('option', { value: 'purchase' }, 'Purchase'),
+                  React.createElement('option', { value: 'other' }, 'Other')
+                )
+              )
+            ),
+            React.createElement('button', {
+              type: 'submit',
+              className: 'w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+            }, 'Add Goal')
+          )
+        )
+      ),
+      React.createElement('div', { className: 'space-y-6' },
+        goals.map((goal) => 
+          React.createElement('div', { key: goal.id, className: 'bg-white rounded-lg shadow p-6' },
+            React.createElement('div', { className: 'flex justify-between items-start mb-4' },
+              React.createElement('div', null,
+                React.createElement('h3', { className: 'text-lg font-medium' }, goal.name),
+                React.createElement('p', { className: 'text-sm text-gray-500' },
+                  `Target: $${goal.targetAmount} | Current: $${goal.currentAmount}`
+                ),
+                React.createElement('p', { className: 'text-sm text-gray-500' },
+                  `Deadline: ${new Date(goal.deadline).toLocaleDateString()}`
+                )
+              ),
+              React.createElement('div', { className: 'flex space-x-2' },
+                React.createElement('button', {
+                  onClick: () => handleDeleteGoal(goal.id),
+                  className: 'text-red-600 hover:text-red-800'
+                }, 'Delete')
+              )
+            ),
+            React.createElement('div', { className: 'h-48' },
+              React.createElement(Line, { data: getProgressData(goal) })
+            ),
+            React.createElement('div', { className: 'mt-4' },
+              React.createElement('div', { className: 'flex items-center space-x-4' },
+                React.createElement('input', {
+                  type: 'number',
+                  placeholder: 'Add amount',
+                  className: 'flex-1 border rounded px-3 py-2',
+                  onChange: (e) => handleUpdateProgress(goal.id, e.target.value)
+                }),
+                React.createElement('button', {
+                  onClick: () => handleUpdateProgress(goal.id, 0),
+                  className: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+                }, 'Update Progress')
+              )
+            )
+          )
+        )
+      )
+    )
   );
 };
 
-export default Goals; 
+module.exports = { Goals }; 
