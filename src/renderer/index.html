@@ -15,14 +15,26 @@
 <body>
     <div id="root"></div>
     <script>
-        const { App } = require('./App');
-        const { BrowserRouter } = window.ReactRouterDOM;
-        window.ReactDOM.render(
-            window.React.createElement(BrowserRouter, null,
-                window.React.createElement(App)
-            ),
-            document.getElementById('root')
-        );
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const { App } = require('./App');
+                const { BrowserRouter } = window.ReactRouterDOM;
+                
+                console.log('Initializing React app...');
+                
+                const app = window.React.createElement(BrowserRouter, null,
+                    window.React.createElement(App)
+                );
+                
+                window.ReactDOM.render(
+                    app,
+                    document.getElementById('root'),
+                    () => console.log('React app rendered successfully')
+                );
+            } catch (error) {
+                console.error('Failed to initialize React app:', error);
+            }
+        });
     </script>
 </body>
 </html> 

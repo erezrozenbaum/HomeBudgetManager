@@ -178,20 +178,25 @@ function createWindow() {
                     "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
                     "style-src 'self' 'unsafe-inline'; " +
                     "img-src 'self' data:; " +
-                    "connect-src 'self' http://localhost:*"
+                    "connect-src 'self' http://localhost:* ws://localhost:*"
                 ]
             }
         });
     });
 
-    // Open DevTools by default for debugging
-    if (isDev) {
-        mainWindow.webContents.openDevTools();
-    }
+    // Open DevTools in both dev and production for debugging
+    mainWindow.webContents.openDevTools();
 
     // Add error handling
     mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
         console.error('Failed to load:', errorCode, errorDescription);
+        // Attempt to reload on failure
+        setTimeout(() => {
+            console.log('Attempting to reload...');
+            mainWindow.loadFile(htmlPath).catch(err => {
+                console.error('Reload failed:', err);
+            });
+        }, 1000);
     });
 
     // Add console logging
@@ -202,14 +207,26 @@ function createWindow() {
     // Load the index.html file from the correct location
     const htmlPath = isDev 
         ? path.join(__dirname, 'src', 'renderer', 'index.html')
-        : path.join(__dirname, 'renderer', 'index.html');
+        : path.join(__dirname, 'dist', 'renderer', 'index.html');
         
+    console.log('Environment:', process.env.NODE_ENV);
     console.log('Loading from path:', htmlPath);
+    console.log('Current directory:', __dirname);
     console.log('File exists:', fs.existsSync(htmlPath));
-    console.log('Directory contents:', fs.readdirSync(path.dirname(htmlPath)));
+    
+    try {
+        const dirPath = path.dirname(htmlPath);
+        console.log('Directory contents:', fs.readdirSync(dirPath));
+    } catch (err) {
+        console.error('Failed to read directory:', err);
+    }
 
     mainWindow.loadFile(htmlPath).catch(err => {
         console.error('Failed to load file:', err);
+        // Try alternative path
+        const altPath = path.join(__dirname, 'renderer', 'index.html');
+        console.log('Trying alternative path:', altPath);
+        return mainWindow.loadFile(altPath);
     });
 
     mainWindow.on('closed', () => {
