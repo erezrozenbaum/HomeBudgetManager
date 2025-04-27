@@ -318,4 +318,4 @@ function Insurances() {
   );
 }
 
-export default Insurances; 
+module.exports = { Insurances }; 
