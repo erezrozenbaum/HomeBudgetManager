@@ -1,14 +1,7 @@
-import React, { useState } from 'react';
-import { Bar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-} from 'chart.js';
+const React = window.React;
+const { useState, useEffect } = React;
+const { Chart: ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } = require('chart.js');
+const { Bar } = require('react-chartjs-2');
 
 ChartJS.register(
   CategoryScale,
@@ -19,339 +12,276 @@ ChartJS.register(
   Legend
 );
 
-const ImportExport = () => {
+function ImportExport() {
   const [activeTab, setActiveTab] = useState('import');
+  const [importType, setImportType] = useState('');
+  const [importFormat, setImportFormat] = useState('');
   const [importFile, setImportFile] = useState(null);
-  const [importType, setImportType] = useState('transactions');
   const [importStatus, setImportStatus] = useState(null);
-  const [exportType, setExportType] = useState('all');
-  const [exportFormat, setExportFormat] = useState('csv');
+  const [exportType, setExportType] = useState('');
+  const [exportFormat, setExportFormat] = useState('');
   const [exportStatus, setExportStatus] = useState(null);
   const [importHistory, setImportHistory] = useState([]);
   const [exportHistory, setExportHistory] = useState([]);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setImportFile(file);
-  };
-
   const handleImport = async (e) => {
     e.preventDefault();
-    if (!importFile) return;
-
     setImportStatus({ type: 'loading', message: 'Importing data...' });
-
     try {
       const formData = new FormData();
       formData.append('file', importFile);
       formData.append('type', importType);
+      formData.append('format', importFormat);
 
       const response = await fetch('/api/import', {
         method: 'POST',
-        body: formData,
+        body: formData
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setImportStatus({ type: 'success', message: 'Import completed successfully' });
-        setImportHistory(prev => [{
-          id: Date.now(),
-          type: importType,
-          date: new Date().toISOString(),
-          status: 'success',
-          records: data.records
-        }, ...prev]);
-      } else {
-        throw new Error('Import failed');
-      }
+      if (!response.ok) throw new Error('Import failed');
+
+      setImportStatus({ type: 'success', message: 'Data imported successfully!' });
+      // Refresh import history
+      fetchImportHistory();
     } catch (error) {
-      setImportStatus({ type: 'error', message: 'Import failed. Please try again.' });
-      setImportHistory(prev => [{
-        id: Date.now(),
-        type: importType,
-        date: new Date().toISOString(),
-        status: 'error',
-        records: 0
-      }, ...prev]);
+      setImportStatus({ type: 'error', message: error.message });
     }
   };
 
   const handleExport = async (e) => {
     e.preventDefault();
-    setExportStatus({ type: 'loading', message: 'Preparing export...' });
-
+    setExportStatus({ type: 'loading', message: 'Exporting data...' });
     try {
       const response = await fetch(`/api/export?type=${exportType}&format=${exportFormat}`);
-      
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `budget_data_${new Date().toISOString()}.${exportFormat}`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+      if (!response.ok) throw new Error('Export failed');
 
-        setExportStatus({ type: 'success', message: 'Export completed successfully' });
-        setExportHistory(prev => [{
-          id: Date.now(),
-          type: exportType,
-          format: exportFormat,
-          date: new Date().toISOString(),
-          status: 'success'
-        }, ...prev]);
-      } else {
-        throw new Error('Export failed');
-      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `export-${exportType}-${new Date().toISOString()}.${exportFormat}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      setExportStatus({ type: 'success', message: 'Data exported successfully!' });
+      // Refresh export history
+      fetchExportHistory();
     } catch (error) {
-      setExportStatus({ type: 'error', message: 'Export failed. Please try again.' });
-      setExportHistory(prev => [{
-        id: Date.now(),
-        type: exportType,
-        format: exportFormat,
-        date: new Date().toISOString(),
-        status: 'error'
-      }, ...prev]);
+      setExportStatus({ type: 'error', message: error.message });
     }
   };
 
-  const getImportHistoryChartData = () => {
-    const last7Days = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      return date.toISOString().split('T')[0];
-    }).reverse();
+  const getImportHistoryChartData = () => ({
+    labels: importHistory.map(record => new Date(record.date).toLocaleDateString()),
+    datasets: [{
+      label: 'Import Activity',
+      data: importHistory.map(record => record.recordCount),
+      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+    }]
+  });
 
-    return {
-      labels: last7Days,
-      datasets: [
-        {
-          label: 'Successful Imports',
-          data: last7Days.map(date => 
-            importHistory.filter(h => 
-              h.date.startsWith(date) && h.status === 'success'
-            ).length
-          ),
-          backgroundColor: 'rgba(75, 192, 192, 0.5)',
-        },
-        {
-          label: 'Failed Imports',
-          data: last7Days.map(date => 
-            importHistory.filter(h => 
-              h.date.startsWith(date) && h.status === 'error'
-            ).length
-          ),
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        }
-      ]
-    };
-  };
+  const getExportHistoryChartData = () => ({
+    labels: exportHistory.map(record => new Date(record.date).toLocaleDateString()),
+    datasets: [{
+      label: 'Export Activity',
+      data: exportHistory.map(record => 1), // Each export counts as 1 activity
+      backgroundColor: 'rgba(75, 192, 192, 0.5)',
+    }]
+  });
 
-  return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Import/Export Tools</h1>
-        <div className="flex space-x-4">
-          <button
-            onClick={() => setActiveTab('import')}
-            className={`px-4 py-2 rounded ${
-              activeTab === 'import' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-            }`}
-          >
-            Import
-          </button>
-          <button
-            onClick={() => setActiveTab('export')}
-            className={`px-4 py-2 rounded ${
-              activeTab === 'export' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-            }`}
-          >
-            Export
-          </button>
-        </div>
-      </div>
-
-      {activeTab === 'import' ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold mb-4">Import Data</h2>
-              <form onSubmit={handleImport}>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">File</label>
-                    <input
-                      type="file"
-                      onChange={handleFileChange}
-                      className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Data Type</label>
-                    <select
-                      value={importType}
-                      onChange={(e) => setImportType(e.target.value)}
-                      className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    >
-                      <option value="transactions">Transactions</option>
-                      <option value="budgets">Budgets</option>
-                      <option value="categories">Categories</option>
-                      <option value="goals">Goals</option>
-                      <option value="debts">Debts</option>
-                    </select>
-                  </div>
-                  {importStatus && (
-                    <div className={`p-4 rounded ${
-                      importStatus.type === 'success' ? 'bg-green-100 text-green-800' :
-                      importStatus.type === 'error' ? 'bg-red-100 text-red-800' :
-                      'bg-blue-100 text-blue-800'
-                    }`}>
-                      {importStatus.message}
-                    </div>
-                  )}
-                  <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    disabled={!importFile || importStatus?.type === 'loading'}
-                  >
-                    Import
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold mb-4">Import History</h2>
-              <div className="space-y-4">
-                {importHistory.map(record => (
-                  <div key={record.id} className="flex justify-between items-center p-4 border rounded">
-                    <div>
-                      <p className="font-medium">{record.type}</p>
-                      <p className="text-sm text-gray-500">
-                        {new Date(record.date).toLocaleString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`font-medium ${
-                        record.status === 'success' ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {record.status}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {record.records} records
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold mb-4">Import Activity</h2>
-            <div className="h-96">
-              <Bar data={getImportHistoryChartData()} />
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold mb-4">Export Data</h2>
-              <form onSubmit={handleExport}>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Data Type</label>
-                    <select
-                      value={exportType}
-                      onChange={(e) => setExportType(e.target.value)}
-                      className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    >
-                      <option value="all">All Data</option>
-                      <option value="transactions">Transactions</option>
-                      <option value="budgets">Budgets</option>
-                      <option value="categories">Categories</option>
-                      <option value="goals">Goals</option>
-                      <option value="debts">Debts</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Format</label>
-                    <select
-                      value={exportFormat}
-                      onChange={(e) => setExportFormat(e.target.value)}
-                      className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    >
-                      <option value="csv">CSV</option>
-                      <option value="json">JSON</option>
-                      <option value="excel">Excel</option>
-                      <option value="pdf">PDF</option>
-                    </select>
-                  </div>
-                  {exportStatus && (
-                    <div className={`p-4 rounded ${
-                      exportStatus.type === 'success' ? 'bg-green-100 text-green-800' :
-                      exportStatus.type === 'error' ? 'bg-red-100 text-red-800' :
-                      'bg-blue-100 text-blue-800'
-                    }`}>
-                      {exportStatus.message}
-                    </div>
-                  )}
-                  <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    disabled={exportStatus?.type === 'loading'}
-                  >
-                    Export
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold mb-4">Export History</h2>
-              <div className="space-y-4">
-                {exportHistory.map(record => (
-                  <div key={record.id} className="flex justify-between items-center p-4 border rounded">
-                    <div>
-                      <p className="font-medium">{record.type}</p>
-                      <p className="text-sm text-gray-500">
-                        {new Date(record.date).toLocaleString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`font-medium ${
-                        record.status === 'success' ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {record.status}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {record.format.toUpperCase()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold mb-4">Export Activity</h2>
-            <div className="h-96">
-              <Bar data={getImportHistoryChartData()} />
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+  return React.createElement('div', { className: 'p-6' },
+    React.createElement('div', { className: 'flex justify-between items-center mb-6' },
+      React.createElement('h1', { className: 'text-2xl font-bold' }, 'Import/Export Tools'),
+      React.createElement('div', { className: 'flex space-x-4' },
+        React.createElement('button', {
+          onClick: () => setActiveTab('import'),
+          className: `px-4 py-2 rounded ${activeTab === 'import' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`
+        }, 'Import'),
+        React.createElement('button', {
+          onClick: () => setActiveTab('export'),
+          className: `px-4 py-2 rounded ${activeTab === 'export' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`
+        }, 'Export')
+      )
+    ),
+    activeTab === 'import' ? React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-2 gap-6' },
+      React.createElement('div', { className: 'space-y-6' },
+        React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+          React.createElement('h2', { className: 'text-lg font-semibold mb-4' }, 'Import Data'),
+          React.createElement('form', { onSubmit: handleImport },
+            React.createElement('div', { className: 'space-y-4' },
+              React.createElement('div', null,
+                React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Data Type'),
+                React.createElement('select', {
+                  value: importType,
+                  onChange: (e) => setImportType(e.target.value),
+                  className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                  required: true
+                },
+                  React.createElement('option', { value: '' }, 'Select type...'),
+                  React.createElement('option', { value: 'transactions' }, 'Transactions'),
+                  React.createElement('option', { value: 'budgets' }, 'Budgets'),
+                  React.createElement('option', { value: 'categories' }, 'Categories'),
+                  React.createElement('option', { value: 'goals' }, 'Goals'),
+                  React.createElement('option', { value: 'debts' }, 'Debts')
+                )
+              ),
+              React.createElement('div', null,
+                React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Format'),
+                React.createElement('select', {
+                  value: importFormat,
+                  onChange: (e) => setImportFormat(e.target.value),
+                  className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                  required: true
+                },
+                  React.createElement('option', { value: '' }, 'Select format...'),
+                  React.createElement('option', { value: 'csv' }, 'CSV'),
+                  React.createElement('option', { value: 'json' }, 'JSON'),
+                  React.createElement('option', { value: 'excel' }, 'Excel')
+                )
+              ),
+              React.createElement('div', null,
+                React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'File'),
+                React.createElement('input', {
+                  type: 'file',
+                  onChange: (e) => setImportFile(e.target.files[0]),
+                  className: 'mt-1 block w-full',
+                  required: true,
+                  accept: importFormat === 'csv' ? '.csv' :
+                         importFormat === 'json' ? '.json' :
+                         importFormat === 'excel' ? '.xlsx,.xls' : undefined
+                })
+              ),
+              importStatus && React.createElement('div', {
+                className: `p-4 rounded ${
+                  importStatus.type === 'success' ? 'bg-green-100 text-green-800' :
+                  importStatus.type === 'error' ? 'bg-red-100 text-red-800' :
+                  'bg-blue-100 text-blue-800'
+                }`
+              }, importStatus.message),
+              React.createElement('button', {
+                type: 'submit',
+                className: 'w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600',
+                disabled: importStatus?.type === 'loading'
+              }, 'Import')
+            )
+          )
+        ),
+        React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+          React.createElement('h2', { className: 'text-lg font-semibold mb-4' }, 'Import History'),
+          React.createElement('div', { className: 'space-y-4' },
+            importHistory.map(record => React.createElement('div', {
+              key: record.id,
+              className: 'flex justify-between items-center p-4 border rounded'
+            },
+              React.createElement('div', null,
+                React.createElement('p', { className: 'font-medium' }, record.type),
+                React.createElement('p', { className: 'text-sm text-gray-500' },
+                  new Date(record.date).toLocaleString()
+                )
+              ),
+              React.createElement('div', { className: 'text-right' },
+                React.createElement('p', {
+                  className: `font-medium ${record.status === 'success' ? 'text-green-600' : 'text-red-600'}`
+                }, record.status),
+                React.createElement('p', { className: 'text-sm text-gray-500' },
+                  `${record.recordCount} records`
+                )
+              )
+            ))
+          )
+        )
+      ),
+      React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+        React.createElement('h2', { className: 'text-lg font-semibold mb-4' }, 'Import Activity'),
+        React.createElement('div', { className: 'h-96' },
+          React.createElement(Bar, { data: getImportHistoryChartData() })
+        )
+      )
+    ) : React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-2 gap-6' },
+      React.createElement('div', { className: 'space-y-6' },
+        React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+          React.createElement('h2', { className: 'text-lg font-semibold mb-4' }, 'Export Data'),
+          React.createElement('form', { onSubmit: handleExport },
+            React.createElement('div', { className: 'space-y-4' },
+              React.createElement('div', null,
+                React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Data Type'),
+                React.createElement('select', {
+                  value: exportType,
+                  onChange: (e) => setExportType(e.target.value),
+                  className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                  required: true
+                },
+                  React.createElement('option', { value: '' }, 'Select type...'),
+                  React.createElement('option', { value: 'all' }, 'All Data'),
+                  React.createElement('option', { value: 'transactions' }, 'Transactions'),
+                  React.createElement('option', { value: 'budgets' }, 'Budgets'),
+                  React.createElement('option', { value: 'categories' }, 'Categories'),
+                  React.createElement('option', { value: 'goals' }, 'Goals'),
+                  React.createElement('option', { value: 'debts' }, 'Debts')
+                )
+              ),
+              React.createElement('div', null,
+                React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Format'),
+                React.createElement('select', {
+                  value: exportFormat,
+                  onChange: (e) => setExportFormat(e.target.value),
+                  className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                  required: true
+                },
+                  React.createElement('option', { value: '' }, 'Select format...'),
+                  React.createElement('option', { value: 'csv' }, 'CSV'),
+                  React.createElement('option', { value: 'json' }, 'JSON'),
+                  React.createElement('option', { value: 'excel' }, 'Excel')
+                )
+              ),
+              exportStatus && React.createElement('div', {
+                className: `p-4 rounded ${
+                  exportStatus.type === 'success' ? 'bg-green-100 text-green-800' :
+                  exportStatus.type === 'error' ? 'bg-red-100 text-red-800' :
+                  'bg-blue-100 text-blue-800'
+                }`
+              }, exportStatus.message),
+              React.createElement('button', {
+                type: 'submit',
+                className: 'w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600',
+                disabled: exportStatus?.type === 'loading'
+              }, 'Export')
+            )
+          )
+        ),
+        React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+          React.createElement('h2', { className: 'text-lg font-semibold mb-4' }, 'Export History'),
+          React.createElement('div', { className: 'space-y-4' },
+            exportHistory.map(record => React.createElement('div', {
+              key: record.id,
+              className: 'flex justify-between items-center p-4 border rounded'
+            },
+              React.createElement('div', null,
+                React.createElement('p', { className: 'font-medium' }, record.type),
+                React.createElement('p', { className: 'text-sm text-gray-500' },
+                  new Date(record.date).toLocaleString()
+                )
+              ),
+              React.createElement('div', { className: 'text-right' },
+                React.createElement('p', {
+                  className: `font-medium ${record.status === 'success' ? 'text-green-600' : 'text-red-600'}`
+                }, record.status),
+                React.createElement('p', { className: 'text-sm text-gray-500' }, record.format)
+              )
+            ))
+          )
+        )
+      ),
+      React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+        React.createElement('h2', { className: 'text-lg font-semibold mb-4' }, 'Export Activity'),
+        React.createElement('div', { className: 'h-96' },
+          React.createElement(Bar, { data: getExportHistoryChartData() })
+        )
+      )
+    )
   );
-};
+}
 
-export default ImportExport; 
+module.exports = { ImportExport }; 

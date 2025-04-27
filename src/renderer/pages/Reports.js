@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Line, Bar, Pie } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
+const React = window.React;
+const { useState } = React;
+const { Line, Bar, Pie } = require('react-chartjs-2');
+const {
+  Chart: ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -11,7 +12,7 @@ import {
   Title,
   Tooltip,
   Legend
-} from 'chart.js';
+} = require('chart.js');
 
 ChartJS.register(
   CategoryScale,
@@ -25,7 +26,7 @@ ChartJS.register(
   Legend
 );
 
-const Reports = () => {
+function Reports() {
   const [activeReport, setActiveReport] = useState('overview');
   const [dateRange, setDateRange] = useState('month');
 
@@ -79,154 +80,102 @@ const Reports = () => {
     console.log(`Exporting report as ${format}`);
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Reports</h1>
-        <div className="flex space-x-4">
-          <select
-            value={dateRange}
-            onChange={(e) => setDateRange(e.target.value)}
-            className="border rounded-lg px-3 py-2"
-          >
-            <option value="week">Last Week</option>
-            <option value="month">Last Month</option>
-            <option value="quarter">Last Quarter</option>
-            <option value="year">Last Year</option>
-          </select>
-          <button
-            onClick={() => handleExport('pdf')}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-          >
-            Export PDF
-          </button>
-          <button
-            onClick={() => handleExport('csv')}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-          >
-            Export CSV
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-white p-4 rounded-lg shadow">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            <button
-              onClick={() => setActiveReport('overview')}
-              className={`${
-                activeReport === 'overview'
+  return React.createElement('div', { className: 'space-y-6' },
+    React.createElement('div', { className: 'flex justify-between items-center' },
+      React.createElement('h1', { className: 'text-2xl font-bold text-gray-800' }, 'Reports'),
+      React.createElement('div', { className: 'flex space-x-4' },
+        React.createElement('select', {
+          value: dateRange,
+          onChange: (e) => setDateRange(e.target.value),
+          className: 'border rounded-lg px-3 py-2'
+        },
+          React.createElement('option', { value: 'week' }, 'Last Week'),
+          React.createElement('option', { value: 'month' }, 'Last Month'),
+          React.createElement('option', { value: 'quarter' }, 'Last Quarter'),
+          React.createElement('option', { value: 'year' }, 'Last Year')
+        ),
+        React.createElement('button', {
+          onClick: () => handleExport('pdf'),
+          className: 'bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'
+        }, 'Export PDF'),
+        React.createElement('button', {
+          onClick: () => handleExport('csv'),
+          className: 'bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'
+        }, 'Export CSV')
+      )
+    ),
+    React.createElement('div', { className: 'bg-white p-4 rounded-lg shadow' },
+      React.createElement('div', { className: 'border-b border-gray-200' },
+        React.createElement('nav', { className: '-mb-px flex space-x-8' },
+          ['overview', 'income', 'expenses', 'savings'].map(report => 
+            React.createElement('button', {
+              key: report,
+              onClick: () => setActiveReport(report),
+              className: `${
+                activeReport === report
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-            >
-              Overview
-            </button>
-            <button
-              onClick={() => setActiveReport('income')}
-              className={`${
-                activeReport === 'income'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-            >
-              Income
-            </button>
-            <button
-              onClick={() => setActiveReport('expenses')}
-              className={`${
-                activeReport === 'expenses'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-            >
-              Expenses
-            </button>
-            <button
-              onClick={() => setActiveReport('savings')}
-              className={`${
-                activeReport === 'savings'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-            >
-              Savings
-            </button>
-          </nav>
-        </div>
-
-        <div className="mt-6">
-          {activeReport === 'overview' && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white p-6 rounded-lg shadow">
-                  <h3 className="text-lg font-semibold text-gray-700">Net Balance</h3>
-                  <p className="text-3xl font-bold text-gray-900">$5,000.00</p>
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow">
-                  <h3 className="text-lg font-semibold text-gray-700">Total Income</h3>
-                  <p className="text-3xl font-bold text-green-600">$4,200.00</p>
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow">
-                  <h3 className="text-lg font-semibold text-gray-700">Total Expenses</h3>
-                  <p className="text-3xl font-bold text-red-600">$3,800.00</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-lg shadow">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-4">Income vs Expenses</h3>
-                  <Line data={incomeExpenseData} />
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-4">Category Breakdown</h3>
-                  <Pie data={categoryData} />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeReport === 'income' && (
-            <div className="space-y-6">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Income Trends</h3>
-                <Line data={incomeExpenseData} />
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Income Sources</h3>
-                <Pie data={categoryData} />
-              </div>
-            </div>
-          )}
-
-          {activeReport === 'expenses' && (
-            <div className="space-y-6">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Expense Trends</h3>
-                <Line data={incomeExpenseData} />
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Expense Categories</h3>
-                <Pie data={categoryData} />
-              </div>
-            </div>
-          )}
-
-          {activeReport === 'savings' && (
-            <div className="space-y-6">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Savings Progress</h3>
-                <Bar data={savingsData} />
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Savings Rate</h3>
-                <Pie data={categoryData} />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`
+            }, report.charAt(0).toUpperCase() + report.slice(1))
+          )
+        )
+      ),
+      React.createElement('div', { className: 'mt-6' },
+        activeReport === 'overview' && React.createElement('div', { className: 'space-y-6' },
+          React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-6' },
+            React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+              React.createElement('h3', { className: 'text-lg font-semibold text-gray-700' }, 'Net Balance'),
+              React.createElement('p', { className: 'text-3xl font-bold text-gray-900' }, '$5,000.00')
+            ),
+            React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+              React.createElement('h3', { className: 'text-lg font-semibold text-gray-700' }, 'Total Income'),
+              React.createElement('p', { className: 'text-3xl font-bold text-green-600' }, '$4,200.00')
+            ),
+            React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+              React.createElement('h3', { className: 'text-lg font-semibold text-gray-700' }, 'Total Expenses'),
+              React.createElement('p', { className: 'text-3xl font-bold text-red-600' }, '$3,800.00')
+            )
+          ),
+          React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-2 gap-6' },
+            React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+              React.createElement('h3', { className: 'text-lg font-semibold text-gray-700 mb-4' }, 'Income vs Expenses'),
+              React.createElement(Line, { data: incomeExpenseData })
+            ),
+            React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+              React.createElement('h3', { className: 'text-lg font-semibold text-gray-700 mb-4' }, 'Category Breakdown'),
+              React.createElement(Pie, { data: categoryData })
+            )
+          )
+        ),
+        activeReport === 'income' && React.createElement('div', { className: 'space-y-6' },
+          React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+            React.createElement('h3', { className: 'text-lg font-semibold text-gray-700 mb-4' }, 'Income Trends'),
+            React.createElement(Line, { data: incomeExpenseData })
+          ),
+          React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+            React.createElement('h3', { className: 'text-lg font-semibold text-gray-700 mb-4' }, 'Income Sources'),
+            React.createElement(Pie, { data: categoryData })
+          )
+        ),
+        activeReport === 'expenses' && React.createElement('div', { className: 'space-y-6' },
+          React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+            React.createElement('h3', { className: 'text-lg font-semibold text-gray-700 mb-4' }, 'Expense Trends'),
+            React.createElement(Line, { data: incomeExpenseData })
+          ),
+          React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+            React.createElement('h3', { className: 'text-lg font-semibold text-gray-700 mb-4' }, 'Expense Categories'),
+            React.createElement(Pie, { data: categoryData })
+          )
+        ),
+        activeReport === 'savings' && React.createElement('div', { className: 'space-y-6' },
+          React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+            React.createElement('h3', { className: 'text-lg font-semibold text-gray-700 mb-4' }, 'Savings Trends'),
+            React.createElement(Bar, { data: savingsData })
+          )
+        )
+      )
+    )
   );
-};
+}
 
-export default Reports; 
+module.exports = { Reports }; 

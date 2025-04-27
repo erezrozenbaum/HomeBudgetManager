@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+const React = window.React;
+const { useState, useEffect } = React;
 
 function Loans() {
   const [loans, setLoans] = useState([]);
@@ -118,222 +119,130 @@ function Loans() {
     }
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Loans</h1>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600"
-        >
-          Add Loan
-        </button>
-      </div>
-
-      {/* Loans Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {loans.map((loan) => {
-          const remainingMonths = calculateRemainingMonths(loan.endDate);
-          return (
-            <div key={loan.id} className="bg-white rounded-lg shadow p-6">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-lg font-semibold">{loan.name}</h3>
-                  <p className="text-sm text-gray-500 mt-1">{loan.notes}</p>
-                </div>
-                <button
-                  onClick={() => handleDeleteLoan(loan.id)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Delete
-                </button>
-              </div>
-
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">Amount</p>
-                  <p className="font-semibold">
-                    {formatCurrency(loan.amount, loan.currency)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Monthly Payment</p>
-                  <p className="font-semibold">
-                    {formatCurrency(loan.monthlyPayment, loan.currency)}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">Interest Rate</p>
-                  <p className="font-semibold">
-                    {formatPercentage(loan.interestRate)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Remaining Months</p>
-                  <p className="font-semibold">{remainingMonths}</p>
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <p className="text-sm text-gray-500">Source</p>
-                <p className="font-semibold">{loan.source}</p>
-              </div>
-
-              <div className="mt-4">
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(loan.status)}`}>
-                  {loan.status.charAt(0).toUpperCase() + loan.status.slice(1)}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Add Loan Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-96">
-            <h2 className="text-xl font-semibold mb-4">Add New Loan</h2>
-            <form onSubmit={handleAddLoan} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
-                <input
-                  type="text"
-                  value={newLoan.name}
-                  onChange={(e) => setNewLoan({ ...newLoan, name: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Amount</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={newLoan.amount}
-                  onChange={(e) => setNewLoan({ ...newLoan, amount: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Currency</label>
-                <select
-                  value={newLoan.currency}
-                  onChange={(e) => setNewLoan({ ...newLoan, currency: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                >
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="GBP">GBP</option>
-                  <option value="JPY">JPY</option>
-                  <option value="ILS">ILS</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Interest Rate (%)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={newLoan.interestRate}
-                  onChange={(e) => setNewLoan({ ...newLoan, interestRate: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Monthly Payment</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={newLoan.monthlyPayment}
-                  onChange={(e) => setNewLoan({ ...newLoan, monthlyPayment: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Start Date</label>
-                <input
-                  type="date"
-                  value={newLoan.startDate}
-                  onChange={(e) => setNewLoan({ ...newLoan, startDate: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">End Date</label>
-                <input
-                  type="date"
-                  value={newLoan.endDate}
-                  onChange={(e) => setNewLoan({ ...newLoan, endDate: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Source</label>
-                <input
-                  type="text"
-                  value={newLoan.source}
-                  onChange={(e) => setNewLoan({ ...newLoan, source: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
-                <select
-                  value={newLoan.status}
-                  onChange={(e) => setNewLoan({ ...newLoan, status: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                >
-                  <option value="active">Active</option>
-                  <option value="paid">Paid</option>
-                  <option value="defaulted">Defaulted</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Notes</label>
-                <textarea
-                  value={newLoan.notes}
-                  onChange={(e) => setNewLoan({ ...newLoan, notes: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  rows="3"
-                />
-              </div>
-              <div className="flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-white bg-primary-500 rounded-lg hover:bg-primary-600"
-                >
-                  Add Loan
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Loading State */}
-      {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-        </div>
-      )}
-    </div>
+  return React.createElement('div', { className: 'space-y-6' },
+    React.createElement('div', { className: 'flex justify-between items-center' },
+      React.createElement('h1', { className: 'text-2xl font-bold' }, 'Loans'),
+      React.createElement('button', {
+        onClick: () => setShowModal(true),
+        className: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+      }, 'Add Loan')
+    ),
+    React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' },
+      loans.map(loan => React.createElement('div', {
+        key: loan.id,
+        className: 'bg-white p-6 rounded-lg shadow'
+      },
+        React.createElement('div', { className: 'flex justify-between items-start mb-4' },
+          React.createElement('div', null,
+            React.createElement('h3', { className: 'text-lg font-semibold' }, loan.name),
+            React.createElement('p', { className: 'text-sm text-gray-500' }, loan.source)
+          ),
+          React.createElement('span', {
+            className: `px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(loan.status)}`
+          }, loan.status)
+        ),
+        React.createElement('div', { className: 'space-y-2' },
+          React.createElement('div', { className: 'flex justify-between' },
+            React.createElement('span', { className: 'text-gray-600' }, 'Amount'),
+            React.createElement('span', null, formatCurrency(loan.amount, loan.currency))
+          ),
+          React.createElement('div', { className: 'flex justify-between' },
+            React.createElement('span', { className: 'text-gray-600' }, 'Interest Rate'),
+            React.createElement('span', null, formatPercentage(loan.interestRate))
+          ),
+          React.createElement('div', { className: 'flex justify-between' },
+            React.createElement('span', { className: 'text-gray-600' }, 'Monthly Payment'),
+            React.createElement('span', null, formatCurrency(loan.monthlyPayment, loan.currency))
+          ),
+          React.createElement('div', { className: 'flex justify-between' },
+            React.createElement('span', { className: 'text-gray-600' }, 'Start Date'),
+            React.createElement('span', null, formatDate(loan.startDate))
+          ),
+          React.createElement('div', { className: 'flex justify-between' },
+            React.createElement('span', { className: 'text-gray-600' }, 'End Date'),
+            React.createElement('span', null, formatDate(loan.endDate))
+          )
+        ),
+        React.createElement('div', { className: 'flex justify-end space-x-2 mt-4' },
+          React.createElement('button', {
+            onClick: () => handleDeleteLoan(loan.id),
+            className: 'text-red-600 hover:text-red-800'
+          }, 'Delete')
+        )
+      ))
+    ),
+    showModal && React.createElement('div', { className: 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center' },
+      React.createElement('div', { className: 'bg-white p-6 rounded-lg w-full max-w-md' },
+        React.createElement('h2', { className: 'text-xl font-bold mb-4' }, 'Add New Loan'),
+        React.createElement('form', { onSubmit: handleAddLoan },
+          React.createElement('div', { className: 'space-y-4' },
+            React.createElement('div', null,
+              React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Name'),
+              React.createElement('input', {
+                type: 'text',
+                name: 'name',
+                value: newLoan.name,
+                onChange: (e) => setNewLoan(prev => ({ ...prev, name: e.target.value })),
+                className: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+              })
+            ),
+            React.createElement('div', null,
+              React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Amount'),
+              React.createElement('input', {
+                type: 'number',
+                name: 'amount',
+                value: newLoan.amount,
+                onChange: (e) => setNewLoan(prev => ({ ...prev, amount: e.target.value })),
+                className: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+              })
+            ),
+            React.createElement('div', null,
+              React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Interest Rate'),
+              React.createElement('input', {
+                type: 'number',
+                name: 'interestRate',
+                value: newLoan.interestRate,
+                onChange: (e) => setNewLoan(prev => ({ ...prev, interestRate: e.target.value })),
+                className: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+              })
+            ),
+            React.createElement('div', null,
+              React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Monthly Payment'),
+              React.createElement('input', {
+                type: 'number',
+                name: 'monthlyPayment',
+                value: newLoan.monthlyPayment,
+                onChange: (e) => setNewLoan(prev => ({ ...prev, monthlyPayment: e.target.value })),
+                className: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+              })
+            ),
+            React.createElement('div', null,
+              React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Source'),
+              React.createElement('input', {
+                type: 'text',
+                name: 'source',
+                value: newLoan.source,
+                onChange: (e) => setNewLoan(prev => ({ ...prev, source: e.target.value })),
+                className: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+              })
+            )
+          ),
+          React.createElement('div', { className: 'flex justify-end space-x-2 mt-6' },
+            React.createElement('button', {
+              type: 'button',
+              onClick: () => setShowModal(false),
+              className: 'px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50'
+            }, 'Cancel'),
+            React.createElement('button', {
+              type: 'submit',
+              disabled: loading,
+              className: 'px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50'
+            }, loading ? 'Adding...' : 'Add Loan')
+          )
+        )
+      )
+    )
   );
 }
 
-export default Loans; 
+module.exports = { Loans }; 

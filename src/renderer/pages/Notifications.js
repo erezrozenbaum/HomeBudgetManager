@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
+const React = window.React;
+const { useState, useEffect } = React;
+const { Line } = require('react-chartjs-2');
+const {
+  Chart: ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -9,7 +10,7 @@ import {
   Title,
   Tooltip,
   Legend
-} from 'chart.js';
+} = require('chart.js');
 
 ChartJS.register(
   CategoryScale,
@@ -21,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-const Notifications = () => {
+function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [alertSettings, setAlertSettings] = useState({
     budgetAlerts: true,
@@ -128,214 +129,174 @@ const Notifications = () => {
     };
   };
 
-  return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Notifications & Alerts</h1>
-        <div className="flex space-x-4">
-          <button
-            onClick={() => setActiveTab('notifications')}
-            className={`px-4 py-2 rounded ${
-              activeTab === 'notifications' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-            }`}
-          >
-            Notifications
-          </button>
-          <button
-            onClick={() => setActiveTab('settings')}
-            className={`px-4 py-2 rounded ${
-              activeTab === 'settings' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-            }`}
-          >
-            Alert Settings
-          </button>
-        </div>
-      </div>
-
-      {activeTab === 'notifications' ? (
-        <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold mb-4">Notification Activity</h2>
-            <div className="h-64">
-              <Line data={getNotificationChartData()} />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-4 border-b">
-              <h2 className="text-lg font-semibold">Recent Notifications</h2>
-            </div>
-            <div className="divide-y">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`p-4 flex justify-between items-center ${
-                    !notification.read ? 'bg-blue-50' : ''
-                  }`}
-                >
-                  <div>
-                    <h3 className="font-medium">{notification.title}</h3>
-                    <p className="text-sm text-gray-500">{notification.message}</p>
-                    <p className="text-xs text-gray-400">
-                      {new Date(notification.date).toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="flex space-x-2">
-                    {!notification.read && (
-                      <button
-                        onClick={() => handleMarkAsRead(notification.id)}
-                        className="text-blue-600 hover:text-blue-800"
-                      >
-                        Mark as Read
-                      </button>
-                    )}
-                    <button
-                      onClick={() => handleDeleteNotification(notification.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Alert Settings</h2>
-          <form onSubmit={handleUpdateSettings}>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-md font-medium mb-3">Notification Types</h3>
-                <div className="space-y-3">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={alertSettings.budgetAlerts}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, budgetAlerts: e.target.checked })}
-                      className="mr-2"
-                    />
-                    Budget Limit Alerts
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={alertSettings.billReminders}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, billReminders: e.target.checked })}
-                      className="mr-2"
-                    />
-                    Bill Payment Reminders
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={alertSettings.lowBalance}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, lowBalance: e.target.checked })}
-                      className="mr-2"
-                    />
-                    Low Balance Alerts
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={alertSettings.unusualSpending}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, unusualSpending: e.target.checked })}
-                      className="mr-2"
-                    />
-                    Unusual Spending Alerts
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={alertSettings.investmentUpdates}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, investmentUpdates: e.target.checked })}
-                      className="mr-2"
-                    />
-                    Investment Updates
-                  </label>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-md font-medium mb-3">Notification Methods</h3>
-                <div className="space-y-3">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={alertSettings.emailNotifications}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, emailNotifications: e.target.checked })}
-                      className="mr-2"
-                    />
-                    Email Notifications
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={alertSettings.pushNotifications}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, pushNotifications: e.target.checked })}
-                      className="mr-2"
-                    />
-                    Push Notifications
-                  </label>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-md font-medium mb-3">Alert Thresholds</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Budget Usage Threshold (%)
-                    </label>
-                    <input
-                      type="number"
-                      value={alertSettings.budgetThreshold}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, budgetThreshold: e.target.value })}
-                      className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      min="0"
-                      max="100"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Low Balance Threshold ($)
-                    </label>
-                    <input
-                      type="number"
-                      value={alertSettings.lowBalanceThreshold}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, lowBalanceThreshold: e.target.value })}
-                      className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      min="0"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Unusual Spending Threshold ($)
-                    </label>
-                    <input
-                      type="number"
-                      value={alertSettings.unusualSpendingThreshold}
-                      onChange={(e) => setAlertSettings({ ...alertSettings, unusualSpendingThreshold: e.target.value })}
-                      className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      min="0"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                Save Settings
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-    </div>
+  return React.createElement('div', { className: 'p-6' },
+    React.createElement('div', { className: 'flex justify-between items-center mb-6' },
+      React.createElement('h1', { className: 'text-2xl font-bold' }, 'Notifications & Alerts'),
+      React.createElement('div', { className: 'flex space-x-4' },
+        React.createElement('button', {
+          onClick: () => setActiveTab('notifications'),
+          className: `px-4 py-2 rounded ${
+            activeTab === 'notifications' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+          }`
+        }, 'Notifications'),
+        React.createElement('button', {
+          onClick: () => setActiveTab('settings'),
+          className: `px-4 py-2 rounded ${
+            activeTab === 'settings' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+          }`
+        }, 'Alert Settings')
+      )
+    ),
+    activeTab === 'notifications' ? React.createElement('div', { className: 'space-y-6' },
+      React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+        React.createElement('h2', { className: 'text-lg font-semibold mb-4' }, 'Notification Activity'),
+        React.createElement('div', { className: 'h-64' },
+          React.createElement(Line, { data: getNotificationChartData() })
+        )
+      ),
+      React.createElement('div', { className: 'bg-white rounded-lg shadow' },
+        React.createElement('div', { className: 'p-4 border-b' },
+          React.createElement('h2', { className: 'text-lg font-semibold' }, 'Recent Notifications')
+        ),
+        React.createElement('div', { className: 'divide-y' },
+          notifications.map((notification) =>
+            React.createElement('div', {
+              key: notification.id,
+              className: `p-4 flex justify-between items-center ${
+                !notification.read ? 'bg-blue-50' : ''
+              }`
+            },
+              React.createElement('div', null,
+                React.createElement('h3', { className: 'font-medium' }, notification.title),
+                React.createElement('p', { className: 'text-sm text-gray-500' }, notification.message),
+                React.createElement('p', { className: 'text-xs text-gray-400' },
+                  new Date(notification.date).toLocaleString()
+                )
+              ),
+              React.createElement('div', { className: 'flex space-x-2' },
+                !notification.read && React.createElement('button', {
+                  onClick: () => handleMarkAsRead(notification.id),
+                  className: 'text-blue-600 hover:text-blue-800'
+                }, 'Mark as Read'),
+                React.createElement('button', {
+                  onClick: () => handleDeleteNotification(notification.id),
+                  className: 'text-red-600 hover:text-red-800'
+                }, 'Delete')
+              )
+            )
+          )
+        )
+      )
+    ) : React.createElement('div', { className: 'bg-white rounded-lg shadow' },
+      React.createElement('div', { className: 'p-4 border-b' },
+        React.createElement('h2', { className: 'text-lg font-semibold' }, 'Alert Settings')
+      ),
+      React.createElement('form', {
+        onSubmit: handleUpdateSettings,
+        className: 'p-4 space-y-4'
+      },
+        React.createElement('div', { className: 'space-y-4' },
+          React.createElement('div', null,
+            React.createElement('h3', { className: 'font-medium mb-2' }, 'Alert Types'),
+            React.createElement('div', { className: 'space-y-2' },
+              Object.entries({
+                budgetAlerts: 'Budget Alerts',
+                billReminders: 'Bill Reminders',
+                lowBalance: 'Low Balance',
+                unusualSpending: 'Unusual Spending',
+                investmentUpdates: 'Investment Updates'
+              }).map(([key, label]) =>
+                React.createElement('div', {
+                  key,
+                  className: 'flex items-center'
+                },
+                  React.createElement('input', {
+                    type: 'checkbox',
+                    id: key,
+                    checked: alertSettings[key],
+                    onChange: (e) => setAlertSettings(prev => ({
+                      ...prev,
+                      [key]: e.target.checked
+                    })),
+                    className: 'h-4 w-4 text-blue-600'
+                  }),
+                  React.createElement('label', {
+                    htmlFor: key,
+                    className: 'ml-2'
+                  }, label)
+                )
+              )
+            )
+          ),
+          React.createElement('div', null,
+            React.createElement('h3', { className: 'font-medium mb-2' }, 'Notification Methods'),
+            React.createElement('div', { className: 'space-y-2' },
+              Object.entries({
+                emailNotifications: 'Email Notifications',
+                pushNotifications: 'Push Notifications'
+              }).map(([key, label]) =>
+                React.createElement('div', {
+                  key,
+                  className: 'flex items-center'
+                },
+                  React.createElement('input', {
+                    type: 'checkbox',
+                    id: key,
+                    checked: alertSettings[key],
+                    onChange: (e) => setAlertSettings(prev => ({
+                      ...prev,
+                      [key]: e.target.checked
+                    })),
+                    className: 'h-4 w-4 text-blue-600'
+                  }),
+                  React.createElement('label', {
+                    htmlFor: key,
+                    className: 'ml-2'
+                  }, label)
+                )
+              )
+            )
+          ),
+          React.createElement('div', null,
+            React.createElement('h3', { className: 'font-medium mb-2' }, 'Thresholds'),
+            React.createElement('div', { className: 'space-y-4' },
+              Object.entries({
+                budgetThreshold: 'Budget Alert Threshold (%)',
+                lowBalanceThreshold: 'Low Balance Threshold ($)',
+                unusualSpendingThreshold: 'Unusual Spending Threshold ($)'
+              }).map(([key, label]) =>
+                React.createElement('div', {
+                  key,
+                  className: 'flex flex-col'
+                },
+                  React.createElement('label', {
+                    htmlFor: key,
+                    className: 'mb-1'
+                  }, label),
+                  React.createElement('input', {
+                    type: 'number',
+                    id: key,
+                    value: alertSettings[key],
+                    onChange: (e) => setAlertSettings(prev => ({
+                      ...prev,
+                      [key]: Number(e.target.value)
+                    })),
+                    className: 'border rounded px-3 py-2'
+                  })
+                )
+              )
+            )
+          )
+        ),
+        React.createElement('div', { className: 'flex justify-end' },
+          React.createElement('button', {
+            type: 'submit',
+            className: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+          }, 'Save Settings')
+        )
+      )
+    )
   );
-};
+}
 
-export default Notifications; 
+module.exports = { Notifications }; 
