@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
+const React = window.React;
+const { useState, useEffect } = React;
+const { Line } = window['react-chartjs-2'];
+const {
+  Chart: ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -9,7 +10,7 @@ import {
   Title,
   Tooltip,
   Legend
-} from 'chart.js';
+} = window['chart.js'];
 
 ChartJS.register(
   CategoryScale,
@@ -70,190 +71,160 @@ function Investments() {
     ]
   };
 
-  const StockCard = ({ investment }) => (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-lg font-semibold">{investment.symbol}</h3>
-          <p className="text-sm text-gray-500">{investment.name}</p>
-        </div>
-        <span className={`text-sm font-medium ${
-          investment.performance >= 0 ? 'text-green-600' : 'text-red-600'
-        }`}>
-          {investment.performance >= 0 ? '+' : ''}{investment.performance}%
-        </span>
-      </div>
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          <span className="text-gray-600">Shares</span>
-          <span>{investment.shares}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Avg. Price</span>
-          <span>${investment.avgPrice.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Current Price</span>
-          <span>${investment.currentPrice.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Total Value</span>
-          <span className="font-medium">
-            ${(investment.shares * investment.currentPrice).toFixed(2)}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
+  function StockCard({ investment }) {
+    return React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+      React.createElement('div', { className: 'flex justify-between items-start mb-4' },
+        React.createElement('div', null,
+          React.createElement('h3', { className: 'text-lg font-semibold' }, investment.symbol),
+          React.createElement('p', { className: 'text-sm text-gray-500' }, investment.name)
+        ),
+        React.createElement('span', {
+          className: `text-sm font-medium ${investment.performance >= 0 ? 'text-green-600' : 'text-red-600'}`
+        }, `${investment.performance >= 0 ? '+' : ''}${investment.performance}%`)
+      ),
+      React.createElement('div', { className: 'space-y-2' },
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Shares'),
+          React.createElement('span', null, investment.shares)
+        ),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Avg. Price'),
+          React.createElement('span', null, `$${investment.avgPrice.toFixed(2)}`)
+        ),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Current Price'),
+          React.createElement('span', null, `$${investment.currentPrice.toFixed(2)}`)
+        ),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Total Value'),
+          React.createElement('span', null, `$${(investment.shares * investment.currentPrice).toFixed(2)}`)
+        )
+      )
+    );
+  }
 
-  const CryptoCard = ({ investment }) => (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-lg font-semibold">{investment.symbol}</h3>
-          <p className="text-sm text-gray-500">{investment.name}</p>
-        </div>
-        <span className={`text-sm font-medium ${
-          investment.performance >= 0 ? 'text-green-600' : 'text-red-600'
-        }`}>
-          {investment.performance >= 0 ? '+' : ''}{investment.performance}%
-        </span>
-      </div>
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          <span className="text-gray-600">Amount</span>
-          <span>{investment.amount}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Avg. Price</span>
-          <span>${investment.avgPrice.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Current Price</span>
-          <span>${investment.currentPrice.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Total Value</span>
-          <span className="font-medium">
-            ${(investment.amount * investment.currentPrice).toFixed(2)}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
+  function CryptoCard({ investment }) {
+    return React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+      React.createElement('div', { className: 'flex justify-between items-start mb-4' },
+        React.createElement('div', null,
+          React.createElement('h3', { className: 'text-lg font-semibold' }, investment.symbol),
+          React.createElement('p', { className: 'text-sm text-gray-500' }, investment.name)
+        ),
+        React.createElement('span', {
+          className: `text-sm font-medium ${investment.performance >= 0 ? 'text-green-600' : 'text-red-600'}`
+        }, `${investment.performance >= 0 ? '+' : ''}${investment.performance}%`)
+      ),
+      React.createElement('div', { className: 'space-y-2' },
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Amount'),
+          React.createElement('span', null, investment.amount)
+        ),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Avg. Price'),
+          React.createElement('span', null, `$${investment.avgPrice.toFixed(2)}`)
+        ),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Current Price'),
+          React.createElement('span', null, `$${investment.currentPrice.toFixed(2)}`)
+        ),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Total Value'),
+          React.createElement('span', null, `$${(investment.amount * investment.currentPrice).toFixed(2)}`)
+        )
+      )
+    );
+  }
 
-  const RealEstateCard = ({ investment }) => (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-lg font-semibold">{investment.name}</h3>
-          <p className="text-sm text-gray-500">Real Estate</p>
-        </div>
-        <span className="text-sm font-medium text-green-600">
-          {investment.roi}% ROI
-        </span>
-      </div>
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          <span className="text-gray-600">Property Value</span>
-          <span>${investment.value.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Monthly Rent</span>
-          <span>${investment.monthlyRent.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Monthly Expenses</span>
-          <span>${investment.expenses.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-600">Monthly Net</span>
-          <span className="font-medium text-green-600">
-            ${(investment.monthlyRent - investment.expenses).toFixed(2)}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
+  function RealEstateCard({ investment }) {
+    return React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+      React.createElement('div', { className: 'flex justify-between items-start mb-4' },
+        React.createElement('div', null,
+          React.createElement('h3', { className: 'text-lg font-semibold' }, investment.name),
+          React.createElement('p', { className: 'text-sm text-gray-500' }, 'Real Estate')
+        ),
+        React.createElement('span', {
+          className: `text-sm font-medium ${investment.roi >= 0 ? 'text-green-600' : 'text-red-600'}`
+        }, `${investment.roi >= 0 ? '+' : ''}${investment.roi}% ROI`)
+      ),
+      React.createElement('div', { className: 'space-y-2' },
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Value'),
+          React.createElement('span', null, `$${investment.value.toFixed(2)}`)
+        ),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Monthly Rent'),
+          React.createElement('span', null, `$${investment.monthlyRent.toFixed(2)}`)
+        ),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Monthly Expenses'),
+          React.createElement('span', null, `$${investment.expenses.toFixed(2)}`)
+        ),
+        React.createElement('div', { className: 'flex justify-between' },
+          React.createElement('span', { className: 'text-gray-600' }, 'Net Monthly Income'),
+          React.createElement('span', null, `$${(investment.monthlyRent - investment.expenses).toFixed(2)}`)
+        )
+      )
+    );
+  }
 
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Investments</h1>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-          Add Investment
-        </button>
-      </div>
-
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-lg font-semibold mb-4">Portfolio Performance</h2>
-        <div className="h-64">
-          <Line data={performanceData} />
-        </div>
-      </div>
-
-      <div className="bg-white p-4 rounded-lg shadow">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            <button
-              onClick={() => setActiveTab('stocks')}
-              className={`${
-                activeTab === 'stocks'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-            >
-              Stocks
-            </button>
-            <button
-              onClick={() => setActiveTab('crypto')}
-              className={`${
-                activeTab === 'crypto'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-            >
-              Crypto
-            </button>
-            <button
-              onClick={() => setActiveTab('realEstate')}
-              className={`${
-                activeTab === 'realEstate'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-            >
-              Real Estate
-            </button>
-          </nav>
-        </div>
-
-        <div className="mt-6">
-          {activeTab === 'stocks' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {investments.stocks.map((investment) => (
-                <StockCard key={investment.id} investment={investment} />
-              ))}
-            </div>
-          )}
-          {activeTab === 'crypto' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {investments.crypto.map((investment) => (
-                <CryptoCard key={investment.id} investment={investment} />
-              ))}
-            </div>
-          )}
-          {activeTab === 'realEstate' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {investments.realEstate.map((investment) => (
-                <RealEstateCard key={investment.id} investment={investment} />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+  return React.createElement('div', { className: 'space-y-6' },
+    React.createElement('div', { className: 'flex justify-between items-center' },
+      React.createElement('h1', { className: 'text-2xl font-bold text-gray-800' }, 'Investments'),
+      React.createElement('button', {
+        className: 'bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'
+      }, 'Add Investment')
+    ),
+    React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow' },
+      React.createElement('h2', { className: 'text-lg font-semibold mb-4' }, 'Portfolio Performance'),
+      React.createElement(Line, {
+        data: performanceData,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Portfolio Value Over Time'
+            }
+          }
+        }
+      })
+    ),
+    React.createElement('div', { className: 'bg-white p-4 rounded-lg shadow' },
+      React.createElement('div', { className: 'border-b border-gray-200' },
+        React.createElement('nav', { className: '-mb-px flex space-x-8' },
+          React.createElement('button', {
+            onClick: () => setActiveTab('stocks'),
+            className: `${activeTab === 'stocks' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`
+          }, 'Stocks'),
+          React.createElement('button', {
+            onClick: () => setActiveTab('crypto'),
+            className: `${activeTab === 'crypto' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`
+          }, 'Cryptocurrency'),
+          React.createElement('button', {
+            onClick: () => setActiveTab('realEstate'),
+            className: `${activeTab === 'realEstate' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`
+          }, 'Real Estate')
+        )
+      ),
+      React.createElement('div', { className: 'mt-6' },
+        ...investments[activeTab].map(investment => {
+          switch (activeTab) {
+            case 'stocks':
+              return React.createElement(StockCard, { key: investment.id, investment });
+            case 'crypto':
+              return React.createElement(CryptoCard, { key: investment.id, investment });
+            case 'realEstate':
+              return React.createElement(RealEstateCard, { key: investment.id, investment });
+            default:
+              return null;
+          }
+        })
+      )
+    )
   );
 }
 
-export default Investments; 
+module.exports = { Investments }; 
