@@ -1,8 +1,7 @@
 const React = window.React;
 const { useState, useEffect } = React;
-const { Line } = window['react-chartjs-2'];
+const Line = window.ChartJS.Line;
 const {
-  Chart: ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -10,17 +9,7 @@ const {
   Title,
   Tooltip,
   Legend
-} = window['chart.js'];
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+} = window.ChartJS;
 
 function Investments() {
   const [activeTab, setActiveTab] = useState('stocks');
