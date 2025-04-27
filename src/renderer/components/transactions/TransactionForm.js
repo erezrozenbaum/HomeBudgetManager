@@ -1,329 +1,309 @@
-import React, { useState } from 'react';
-import { Dialog } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+const React = window.React;
+const { useState, useEffect } = React;
+const { Card } = require('../Card');
+const { Button } = require('../Button');
+const { FormInput } = require('../FormInput');
+const { AuthSelect } = require('../auth/AuthSelect');
+const { AuthCheckbox } = require('../auth/AuthCheckbox');
+const { ipcRenderer } = require('electron');
 
-export default function TransactionForm({ type, isOpen, onClose }) {
+const TransactionForm = ({ transaction, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
+    type: 'regular',
     date: new Date().toISOString().split('T')[0],
     amount: '',
     description: '',
     category: '',
     subCategory: '',
     paymentMethod: '',
-    paymentDetails: {},
-    tags: [],
-    notes: '',
-    // Recurring transaction fields
     frequency: '',
-    startDate: new Date().toISOString().split('T')[0],
+    startDate: '',
     endDate: '',
     isActive: true,
-    // Unplanned transaction fields
     impact: '',
     emergencyLevel: '',
-    // Business transaction fields
+    tags: [],
     business: '',
+    transactionType: '',
+    status: 'pending',
     taxRelated: {
       isDeductible: false,
-      deductionCategory: '',
       taxYear: new Date().getFullYear()
     }
   });
 
+  useEffect(() => {
+    if (transaction) {
+      setFormData(transaction);
+    }
+  }, [transaction]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: checked
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
-  };
-
-  const handleNestedChange = (parent, field, value) => {
     setFormData(prev => ({
       ...prev,
-      [parent]: {
-        ...prev[parent],
-        [field]: value
-      }
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const endpoint = type === 'regular' ? '/api/transactions' : `/api/transactions/${type}`;
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create transaction');
-      }
-
-      onClose();
-    } catch (error) {
-      console.error('Error creating transaction:', error);
-    }
+    onSubmit(formData);
   };
 
-  return (
-    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="mx-auto max-w-2xl w-full bg-white rounded-xl p-6">
-          <div className="flex justify-between items-center mb-4">
-            <Dialog.Title className="text-lg font-medium">
-              Add {type.charAt(0).toUpperCase() + type.slice(1)} Transaction
-            </Dialog.Title>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
-              <XMarkIcon className="h-6 w-6" />
-            </button>
-          </div>
+  const categories = [
+    { value: 'food', label: 'Food' },
+    { value: 'housing', label: 'Housing' },
+    { value: 'transportation', label: 'Transportation' },
+    { value: 'entertainment', label: 'Entertainment' },
+    { value: 'utilities', label: 'Utilities' },
+    { value: 'healthcare', label: 'Healthcare' },
+    { value: 'income', label: 'Income' }
+  ];
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Common fields */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Date</label>
-                <input
-                  type="date"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Amount</label>
-                <input
-                  type="number"
-                  name="amount"
-                  value={formData.amount}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  required
-                />
-              </div>
-            </div>
+  const paymentMethods = [
+    { value: 'cash', label: 'Cash' },
+    { value: 'credit_card', label: 'Credit Card' },
+    { value: 'debit_card', label: 'Debit Card' },
+    { value: 'bank_transfer', label: 'Bank Transfer' }
+  ];
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Description</label>
-              <input
-                type="text"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Category</label>
-                <input
-                  type="text"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Sub Category</label>
-                <input
-                  type="text"
-                  name="subCategory"
-                  value={formData.subCategory}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-
-            {/* Payment details */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Payment Method</label>
-                <select
-                  name="paymentMethod"
-                  value={formData.paymentMethod}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                >
-                  <option value="">Select Payment Method</option>
-                  <option value="cash">Cash</option>
-                  <option value="check">Check</option>
-                  <option value="credit_card">Credit Card</option>
-                  <option value="debit_card">Debit Card</option>
-                  <option value="bank_transfer">Bank Transfer</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Type-specific fields */}
-            {type === 'recurring' && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Frequency</label>
-                    <select
-                      name="frequency"
-                      value={formData.frequency}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                      required
-                    >
-                      <option value="">Select Frequency</option>
-                      <option value="daily">Daily</option>
-                      <option value="weekly">Weekly</option>
-                      <option value="monthly">Monthly</option>
-                      <option value="quarterly">Quarterly</option>
-                      <option value="yearly">Yearly</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Start Date</label>
-                    <input
-                      type="date"
-                      name="startDate"
-                      value={formData.startDate}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                      required
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">End Date (Optional)</label>
-                  <input
-                    type="date"
-                    name="endDate"
-                    value={formData.endDate}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  />
-                </div>
-              </div>
-            )}
-
-            {type === 'unplanned' && (
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Impact</label>
-                  <select
-                    name="impact"
-                    value={formData.impact}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  >
-                    <option value="">Select Impact</option>
-                    <option value="positive">Positive</option>
-                    <option value="negative">Negative</option>
-                    <option value="neutral">Neutral</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Emergency Level</label>
-                  <select
-                    name="emergencyLevel"
-                    value={formData.emergencyLevel}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  >
-                    <option value="">Select Level</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                    <option value="critical">Critical</option>
-                  </select>
-                </div>
-              </div>
-            )}
-
-            {type === 'business' && (
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Business</label>
-                  <input
-                    type="text"
-                    name="business"
-                    value={formData.business}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={formData.taxRelated.isDeductible}
-                      onChange={(e) => handleNestedChange('taxRelated', 'isDeductible', e.target.checked)}
-                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">Tax Deductible</span>
-                  </label>
-                  {formData.taxRelated.isDeductible && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Deduction Category</label>
-                        <input
-                          type="text"
-                          value={formData.taxRelated.deductionCategory}
-                          onChange={(e) => handleNestedChange('taxRelated', 'deductionCategory', e.target.value)}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Tax Year</label>
-                        <input
-                          type="number"
-                          value={formData.taxRelated.taxYear}
-                          onChange={(e) => handleNestedChange('taxRelated', 'taxYear', parseInt(e.target.value))}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div className="flex justify-end space-x-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
-              >
-                Add Transaction
-              </button>
-            </div>
-          </form>
-        </Dialog.Panel>
-      </div>
-    </Dialog>
+  return React.createElement(
+    Card,
+    { className: 'p-6' },
+    React.createElement(
+      'form',
+      { onSubmit: handleSubmit, className: 'space-y-4' },
+      React.createElement(
+        'h2',
+        { className: 'text-xl font-bold mb-4' },
+        transaction ? 'Edit Transaction' : 'Add Transaction'
+      ),
+      React.createElement(
+        AuthSelect,
+        {
+          label: 'Transaction Type',
+          name: 'type',
+          value: formData.type,
+          onChange: handleChange,
+          options: [
+            { value: 'regular', label: 'Regular' },
+            { value: 'recurring', label: 'Recurring' },
+            { value: 'unplanned', label: 'Unplanned' },
+            { value: 'business', label: 'Business' }
+          ],
+          required: true
+        }
+      ),
+      React.createElement(
+        FormInput,
+        {
+          type: 'date',
+          name: 'date',
+          value: formData.date,
+          onChange: handleChange,
+          label: 'Date',
+          required: true
+        }
+      ),
+      React.createElement(
+        FormInput,
+        {
+          type: 'number',
+          name: 'amount',
+          value: formData.amount,
+          onChange: handleChange,
+          label: 'Amount',
+          required: true
+        }
+      ),
+      React.createElement(
+        FormInput,
+        {
+          type: 'text',
+          name: 'description',
+          value: formData.description,
+          onChange: handleChange,
+          label: 'Description',
+          required: true
+        }
+      ),
+      React.createElement(
+        AuthSelect,
+        {
+          label: 'Category',
+          name: 'category',
+          value: formData.category,
+          onChange: handleChange,
+          options: categories,
+          required: true
+        }
+      ),
+      React.createElement(
+        AuthSelect,
+        {
+          label: 'Payment Method',
+          name: 'paymentMethod',
+          value: formData.paymentMethod,
+          onChange: handleChange,
+          options: paymentMethods,
+          required: true
+        }
+      ),
+      formData.type === 'recurring' && React.createElement(
+        'div',
+        { className: 'space-y-4' },
+        React.createElement(
+          AuthSelect,
+          {
+            label: 'Frequency',
+            name: 'frequency',
+            value: formData.frequency,
+            onChange: handleChange,
+            options: [
+              { value: 'daily', label: 'Daily' },
+              { value: 'weekly', label: 'Weekly' },
+              { value: 'monthly', label: 'Monthly' },
+              { value: 'yearly', label: 'Yearly' }
+            ],
+            required: true
+          }
+        ),
+        React.createElement(
+          FormInput,
+          {
+            type: 'date',
+            name: 'startDate',
+            value: formData.startDate,
+            onChange: handleChange,
+            label: 'Start Date',
+            required: true
+          }
+        ),
+        React.createElement(
+          FormInput,
+          {
+            type: 'date',
+            name: 'endDate',
+            value: formData.endDate,
+            onChange: handleChange,
+            label: 'End Date'
+          }
+        ),
+        React.createElement(
+          AuthCheckbox,
+          {
+            name: 'isActive',
+            checked: formData.isActive,
+            onChange: handleChange,
+            label: 'Active'
+          }
+        )
+      ),
+      formData.type === 'unplanned' && React.createElement(
+        'div',
+        { className: 'space-y-4' },
+        React.createElement(
+          AuthSelect,
+          {
+            label: 'Impact',
+            name: 'impact',
+            value: formData.impact,
+            onChange: handleChange,
+            options: [
+              { value: 'positive', label: 'Positive' },
+              { value: 'negative', label: 'Negative' },
+              { value: 'neutral', label: 'Neutral' }
+            ],
+            required: true
+          }
+        ),
+        React.createElement(
+          AuthSelect,
+          {
+            label: 'Emergency Level',
+            name: 'emergencyLevel',
+            value: formData.emergencyLevel,
+            onChange: handleChange,
+            options: [
+              { value: 'low', label: 'Low' },
+              { value: 'medium', label: 'Medium' },
+              { value: 'high', label: 'High' }
+            ],
+            required: true
+          }
+        )
+      ),
+      formData.type === 'business' && React.createElement(
+        'div',
+        { className: 'space-y-4' },
+        React.createElement(
+          FormInput,
+          {
+            type: 'text',
+            name: 'business',
+            value: formData.business,
+            onChange: handleChange,
+            label: 'Business Name',
+            required: true
+          }
+        ),
+        React.createElement(
+          AuthSelect,
+          {
+            label: 'Transaction Type',
+            name: 'transactionType',
+            value: formData.transactionType,
+            onChange: handleChange,
+            options: [
+              { value: 'income', label: 'Income' },
+              { value: 'expense', label: 'Expense' },
+              { value: 'investment', label: 'Investment' }
+            ],
+            required: true
+          }
+        ),
+        React.createElement(
+          AuthCheckbox,
+          {
+            name: 'taxRelated.isDeductible',
+            checked: formData.taxRelated.isDeductible,
+            onChange: (e) => {
+              setFormData(prev => ({
+                ...prev,
+                taxRelated: {
+                  ...prev.taxRelated,
+                  isDeductible: e.target.checked
+                }
+              }));
+            },
+            label: 'Tax Deductible'
+          }
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'flex justify-end space-x-4' },
+        React.createElement(
+          Button,
+          {
+            type: 'button',
+            onClick: onCancel,
+            className: 'bg-gray-500 hover:bg-gray-600'
+          },
+          'Cancel'
+        ),
+        React.createElement(
+          Button,
+          {
+            type: 'submit',
+            className: 'bg-blue-500 hover:bg-blue-600'
+          },
+          transaction ? 'Update' : 'Add'
+        )
+      )
+    )
   );
-} 
+};
+
+module.exports = { TransactionForm }; 

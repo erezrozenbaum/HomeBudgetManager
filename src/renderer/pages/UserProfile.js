@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+const React = window.React;
+const { useState, useEffect } = React;
+const { useNavigate } = require('react-router-dom');
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -165,291 +166,361 @@ const UserProfile = () => {
     }
   };
 
-  return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">User Profile & Preferences</h1>
-        <div className="flex space-x-4">
-          <select
-            className="border rounded px-3 py-2"
-            value={activeTab}
-            onChange={(e) => setActiveTab(e.target.value)}
-          >
-            <option value="profile">Profile</option>
-            <option value="preferences">Preferences</option>
-            <option value="security">Security</option>
-          </select>
-        </div>
-      </div>
-
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-          {success}
-        </div>
-      )}
-
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow p-6">
-          {activeTab === 'profile' && (
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold">Personal Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">First Name</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={user.firstName}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={user.lastName}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={user.email}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Phone</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={user.phone}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">Address</label>
-                  <textarea
-                    name="address"
-                    value={user.address}
-                    onChange={handleInputChange}
-                    rows={3}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'preferences' && (
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold">Application Preferences</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Currency</label>
-                  <select
-                    name="currency"
-                    value={user.preferences.currency}
-                    onChange={handlePreferenceChange}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
-                    <option value="JPY">JPY (¥)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Language</label>
-                  <select
-                    name="language"
-                    value={user.preferences.language}
-                    onChange={handlePreferenceChange}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="en">English</option>
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Theme</label>
-                  <select
-                    name="theme"
-                    value={user.preferences.theme}
-                    onChange={handlePreferenceChange}
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                    <option value="system">System</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Notifications</h3>
-                <div className="space-y-2">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="notifications.email"
-                      checked={user.preferences.notifications.email}
-                      onChange={handlePreferenceChange}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2">Email Notifications</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="notifications.push"
-                      checked={user.preferences.notifications.push}
-                      onChange={handlePreferenceChange}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2">Push Notifications</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="notifications.sms"
-                      checked={user.preferences.notifications.sms}
-                      onChange={handlePreferenceChange}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2">SMS Notifications</span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Privacy Settings</h3>
-                <div className="space-y-2">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="privacy.showBalance"
-                      checked={user.preferences.privacy.showBalance}
-                      onChange={handlePreferenceChange}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2">Show Account Balance</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="privacy.showTransactions"
-                      checked={user.preferences.privacy.showTransactions}
-                      onChange={handlePreferenceChange}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2">Show Transaction History</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="privacy.showGoals"
-                      checked={user.preferences.privacy.showGoals}
-                      onChange={handlePreferenceChange}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2">Show Financial Goals</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'security' && (
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold">Security Settings</h2>
-              <form onSubmit={handlePasswordChange} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Current Password</label>
-                  <input
-                    type="password"
-                    name="currentPassword"
-                    required
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">New Password</label>
-                  <input
-                    type="password"
-                    name="newPassword"
-                    required
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Confirm New Password</label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    required
-                    className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                  {saving ? 'Changing Password...' : 'Change Password'}
-                </button>
-              </form>
-
-              <div className="border-t pt-6">
-                <h3 className="text-lg font-medium text-red-600">Danger Zone</h3>
-                <p className="text-sm text-gray-500 mt-2">
-                  Once you delete your account, there is no going back. Please be certain.
-                </p>
-                <button
-                  onClick={handleDeleteAccount}
-                  disabled={saving}
-                  className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                >
-                  {saving ? 'Deleting Account...' : 'Delete Account'}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeTab !== 'security' && (
-            <div className="mt-6">
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+  return React.createElement(
+    'div',
+    { className: 'p-6' },
+    React.createElement(
+      'div',
+      { className: 'flex justify-between items-center mb-6' },
+      React.createElement('h1', { className: 'text-2xl font-bold' }, 'User Profile & Preferences'),
+      React.createElement(
+        'div',
+        { className: 'flex space-x-4' },
+        React.createElement(
+          'select',
+          {
+            className: 'border rounded px-3 py-2',
+            value: activeTab,
+            onChange: (e) => setActiveTab(e.target.value)
+          },
+          React.createElement('option', { value: 'profile' }, 'Profile'),
+          React.createElement('option', { value: 'preferences' }, 'Preferences'),
+          React.createElement('option', { value: 'security' }, 'Security')
+        )
+      )
+    ),
+    error && React.createElement(
+      'div',
+      { className: 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4' },
+      error
+    ),
+    success && React.createElement(
+      'div',
+      { className: 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4' },
+      success
+    ),
+    loading ? React.createElement(
+      'div',
+      { className: 'flex justify-center items-center h-64' },
+      React.createElement('div', { className: 'animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500' })
+    ) : React.createElement(
+      'div',
+      { className: 'bg-white rounded-lg shadow p-6' },
+      activeTab === 'profile' && React.createElement(
+        'div',
+        { className: 'space-y-6' },
+        React.createElement('h2', { className: 'text-xl font-semibold' }, 'Personal Information'),
+        React.createElement(
+          'div',
+          { className: 'grid grid-cols-1 md:grid-cols-2 gap-6' },
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'First Name'),
+            React.createElement('input', {
+              type: 'text',
+              name: 'firstName',
+              value: user.firstName,
+              onChange: handleInputChange,
+              className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+            })
+          ),
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Last Name'),
+            React.createElement('input', {
+              type: 'text',
+              name: 'lastName',
+              value: user.lastName,
+              onChange: handleInputChange,
+              className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+            })
+          ),
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Email'),
+            React.createElement('input', {
+              type: 'email',
+              name: 'email',
+              value: user.email,
+              onChange: handleInputChange,
+              className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+            })
+          ),
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Phone'),
+            React.createElement('input', {
+              type: 'tel',
+              name: 'phone',
+              value: user.phone,
+              onChange: handleInputChange,
+              className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+            })
+          ),
+          React.createElement(
+            'div',
+            { className: 'md:col-span-2' },
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Address'),
+            React.createElement('textarea', {
+              name: 'address',
+              value: user.address,
+              onChange: handleInputChange,
+              className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+              rows: 3
+            })
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'flex justify-end space-x-4' },
+          React.createElement(
+            'button',
+            {
+              onClick: handleSave,
+              disabled: saving,
+              className: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50'
+            },
+            saving ? 'Saving...' : 'Save Changes'
+          )
+        )
+      ),
+      activeTab === 'preferences' && React.createElement(
+        'div',
+        { className: 'space-y-6' },
+        React.createElement('h2', { className: 'text-xl font-semibold' }, 'Preferences'),
+        React.createElement(
+          'div',
+          { className: 'grid grid-cols-1 md:grid-cols-2 gap-6' },
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Currency'),
+            React.createElement(
+              'select',
+              {
+                name: 'preferences.currency',
+                value: user.preferences.currency,
+                onChange: handlePreferenceChange,
+                className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+              },
+              React.createElement('option', { value: 'USD' }, 'USD'),
+              React.createElement('option', { value: 'EUR' }, 'EUR'),
+              React.createElement('option', { value: 'GBP' }, 'GBP')
+            )
+          ),
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Language'),
+            React.createElement(
+              'select',
+              {
+                name: 'preferences.language',
+                value: user.preferences.language,
+                onChange: handlePreferenceChange,
+                className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+              },
+              React.createElement('option', { value: 'en' }, 'English'),
+              React.createElement('option', { value: 'es' }, 'Spanish'),
+              React.createElement('option', { value: 'fr' }, 'French')
+            )
+          ),
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Theme'),
+            React.createElement(
+              'select',
+              {
+                name: 'preferences.theme',
+                value: user.preferences.theme,
+                onChange: handlePreferenceChange,
+                className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+              },
+              React.createElement('option', { value: 'light' }, 'Light'),
+              React.createElement('option', { value: 'dark' }, 'Dark'),
+              React.createElement('option', { value: 'system' }, 'System')
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'mt-6' },
+          React.createElement('h3', { className: 'text-lg font-medium mb-4' }, 'Notifications'),
+          React.createElement(
+            'div',
+            { className: 'space-y-4' },
+            React.createElement(
+              'label',
+              { className: 'flex items-center' },
+              React.createElement('input', {
+                type: 'checkbox',
+                name: 'preferences.notifications.email',
+                checked: user.preferences.notifications.email,
+                onChange: handlePreferenceChange,
+                className: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+              }),
+              React.createElement('span', { className: 'ml-2' }, 'Email Notifications')
+            ),
+            React.createElement(
+              'label',
+              { className: 'flex items-center' },
+              React.createElement('input', {
+                type: 'checkbox',
+                name: 'preferences.notifications.push',
+                checked: user.preferences.notifications.push,
+                onChange: handlePreferenceChange,
+                className: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+              }),
+              React.createElement('span', { className: 'ml-2' }, 'Push Notifications')
+            ),
+            React.createElement(
+              'label',
+              { className: 'flex items-center' },
+              React.createElement('input', {
+                type: 'checkbox',
+                name: 'preferences.notifications.sms',
+                checked: user.preferences.notifications.sms,
+                onChange: handlePreferenceChange,
+                className: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+              }),
+              React.createElement('span', { className: 'ml-2' }, 'SMS Notifications')
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'mt-6' },
+          React.createElement('h3', { className: 'text-lg font-medium mb-4' }, 'Privacy Settings'),
+          React.createElement(
+            'div',
+            { className: 'space-y-4' },
+            React.createElement(
+              'label',
+              { className: 'flex items-center' },
+              React.createElement('input', {
+                type: 'checkbox',
+                name: 'preferences.privacy.showBalance',
+                checked: user.preferences.privacy.showBalance,
+                onChange: handlePreferenceChange,
+                className: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+              }),
+              React.createElement('span', { className: 'ml-2' }, 'Show Account Balance')
+            ),
+            React.createElement(
+              'label',
+              { className: 'flex items-center' },
+              React.createElement('input', {
+                type: 'checkbox',
+                name: 'preferences.privacy.showTransactions',
+                checked: user.preferences.privacy.showTransactions,
+                onChange: handlePreferenceChange,
+                className: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+              }),
+              React.createElement('span', { className: 'ml-2' }, 'Show Transactions')
+            ),
+            React.createElement(
+              'label',
+              { className: 'flex items-center' },
+              React.createElement('input', {
+                type: 'checkbox',
+                name: 'preferences.privacy.showGoals',
+                checked: user.preferences.privacy.showGoals,
+                onChange: handlePreferenceChange,
+                className: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+              }),
+              React.createElement('span', { className: 'ml-2' }, 'Show Financial Goals')
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'flex justify-end space-x-4' },
+          React.createElement(
+            'button',
+            {
+              onClick: handleSave,
+              disabled: saving,
+              className: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50'
+            },
+            saving ? 'Saving...' : 'Save Changes'
+          )
+        )
+      ),
+      activeTab === 'security' && React.createElement(
+        'div',
+        { className: 'space-y-6' },
+        React.createElement('h2', { className: 'text-xl font-semibold' }, 'Security Settings'),
+        React.createElement(
+          'form',
+          { onSubmit: handlePasswordChange, className: 'space-y-6' },
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Current Password'),
+            React.createElement('input', {
+              type: 'password',
+              name: 'currentPassword',
+              required: true,
+              className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+            })
+          ),
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'New Password'),
+            React.createElement('input', {
+              type: 'password',
+              name: 'newPassword',
+              required: true,
+              className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+            })
+          ),
+          React.createElement(
+            'div',
+            null,
+            React.createElement('label', { className: 'block text-sm font-medium text-gray-700' }, 'Confirm New Password'),
+            React.createElement('input', {
+              type: 'password',
+              name: 'confirmPassword',
+              required: true,
+              className: 'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500'
+            })
+          ),
+          React.createElement(
+            'div',
+            { className: 'flex justify-end space-x-4' },
+            React.createElement(
+              'button',
+              {
+                type: 'submit',
+                disabled: saving,
+                className: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50'
+              },
+              saving ? 'Changing Password...' : 'Change Password'
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'mt-8 pt-6 border-t' },
+          React.createElement('h3', { className: 'text-lg font-medium text-red-600 mb-4' }, 'Danger Zone'),
+          React.createElement(
+            'button',
+            {
+              onClick: handleDeleteAccount,
+              className: 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600'
+            },
+            'Delete Account'
+          )
+        )
+      )
+    )
   );
 };
 
-export default UserProfile; 
+module.exports = { UserProfile }; 

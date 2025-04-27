@@ -1,11 +1,25 @@
-export { default as BankAccounts } from './BankAccounts';
-export { default as CreditCards } from './CreditCards';
-export { default as Transactions } from './Transactions';
-export { default as Investments } from './Investments';
-export { default as SavingGoals } from './SavingGoals';
-export { default as Loans } from './Loans';
-export { default as Insurances } from './Insurances';
-export { default as Businesses } from './Businesses';
-export { default as AIFinancialAdvisor } from './AIFinancialAdvisor';
-export { default as Dashboard } from './Dashboard';
-export { default as Settings } from './Settings'; 
+const { BankAccounts } = require('./BankAccounts');
+const { CreditCards } = require('./CreditCards');
+const { Transactions } = require('./Transactions');
+const { Investments } = require('./Investments');
+const { SavingGoals } = require('./SavingGoals');
+const { Loans } = require('./Loans');
+const { Insurances } = require('./Insurances');
+const { Businesses } = require('./Businesses');
+const { AIFinancialAdvisor } = require('./AIFinancialAdvisor');
+const { Dashboard } = require('./Dashboard');
+const { Settings } = require('./Settings');
+
+module.exports = {
+  BankAccounts,
+  CreditCards,
+  Transactions,
+  Investments,
+  SavingGoals,
+  Loans,
+  Insurances,
+  Businesses,
+  AIFinancialAdvisor,
+  Dashboard,
+  Settings
+}; 

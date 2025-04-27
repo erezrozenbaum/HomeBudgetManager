@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { downloadExcel, downloadExcelTemplate, importFromExcel } from '../utils/excel';
-import { Button } from './Button';
-import { Modal } from './Modal';
+const React = window.React;
+const { useState } = React;
+const { downloadExcel, downloadExcelTemplate, importFromExcel } = require('../utils/excel');
+const { Button } = require('./Button');
+const { Modal } = require('./Modal');
 
 const ExcelOperations = ({ type, onImport }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,63 +47,82 @@ const ExcelOperations = ({ type, onImport }) => {
     }
   };
 
-  return (
-    <div className="space-y-4">
-      <div className="flex space-x-4">
-        <Button onClick={handleExport} variant="primary">
-          Export to Excel
-        </Button>
-        <Button onClick={() => setIsModalOpen(true)} variant="secondary">
-          Import from Excel
-        </Button>
-        <Button onClick={handleDownloadTemplate} variant="outline">
-          Download Template
-        </Button>
-      </div>
-
-      {error && (
-        <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-          {success}
-        </div>
-      )}
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Import from Excel"
-      >
-        <div className="space-y-4">
-          <p className="text-gray-600">
-            Please select an Excel file to import. Make sure it follows the template format.
-          </p>
-          <div className="flex items-center space-x-4">
-            <input
-              type="file"
-              accept=".xlsx,.xls"
-              onChange={handleImport}
-              className="block w-full text-sm text-gray-500
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-blue-50 file:text-blue-700
-                hover:file:bg-blue-100"
-            />
-          </div>
-          <div className="flex justify-end">
-            <Button onClick={() => setIsModalOpen(false)} variant="outline">
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </Modal>
-    </div>
+  return React.createElement(
+    'div',
+    { className: 'space-y-4' },
+    React.createElement(
+      'div',
+      { className: 'flex space-x-4' },
+      React.createElement(
+        Button,
+        { onClick: handleExport, variant: 'primary' },
+        'Export to Excel'
+      ),
+      React.createElement(
+        Button,
+        { onClick: () => setIsModalOpen(true), variant: 'secondary' },
+        'Import from Excel'
+      ),
+      React.createElement(
+        Button,
+        { onClick: handleDownloadTemplate, variant: 'outline' },
+        'Download Template'
+      )
+    ),
+    error && React.createElement(
+      'div',
+      { className: 'p-4 bg-red-100 border border-red-400 text-red-700 rounded' },
+      error
+    ),
+    success && React.createElement(
+      'div',
+      { className: 'p-4 bg-green-100 border border-green-400 text-green-700 rounded' },
+      success
+    ),
+    React.createElement(
+      Modal,
+      {
+        isOpen: isModalOpen,
+        onClose: () => setIsModalOpen(false),
+        title: 'Import from Excel'
+      },
+      React.createElement(
+        'div',
+        { className: 'space-y-4' },
+        React.createElement(
+          'p',
+          { className: 'text-gray-600' },
+          'Please select an Excel file to import. Make sure it follows the template format.'
+        ),
+        React.createElement(
+          'div',
+          { className: 'flex items-center space-x-4' },
+          React.createElement('input', {
+            type: 'file',
+            accept: '.xlsx,.xls',
+            onChange: handleImport,
+            className: `
+              block w-full text-sm text-gray-500
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-full file:border-0
+              file:text-sm file:font-semibold
+              file:bg-blue-50 file:text-blue-700
+              hover:file:bg-blue-100
+            `
+          })
+        ),
+        React.createElement(
+          'div',
+          { className: 'flex justify-end' },
+          React.createElement(
+            Button,
+            { onClick: () => setIsModalOpen(false), variant: 'outline' },
+            'Cancel'
+          )
+        )
+      )
+    )
   );
 };
 
-export default ExcelOperations; 
+module.exports = { ExcelOperations }; 

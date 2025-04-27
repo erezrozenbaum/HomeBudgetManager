@@ -1,19 +1,24 @@
-import React from 'react';
-import Sidebar from './Sidebar';
-import Header from './Header';
+const React = window.React;
+const { Outlet } = require('react-router-dom');
+const { Header } = require('./Header');
+const { Sidebar } = require('./Sidebar');
 
-const MainLayout = ({ children }) => {
-  return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-          {children}
-        </main>
-      </div>
-    </div>
+const MainLayout = () => {
+  return React.createElement(
+    'div',
+    { className: 'min-h-screen bg-gray-100' },
+    React.createElement(Header, null),
+    React.createElement(
+      'div',
+      { className: 'flex' },
+      React.createElement(Sidebar, null),
+      React.createElement(
+        'main',
+        { className: 'flex-1 p-6' },
+        React.createElement(Outlet, null)
+      )
+    )
   );
 };
 
-export default MainLayout; 
+module.exports = { MainLayout }; 

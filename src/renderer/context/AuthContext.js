@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ipcRenderer } from 'electron';
+const React = window.React;
+const { createContext, useContext, useState, useEffect } = React;
+const { ipcRenderer } = require('electron');
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isPasswordProtected, setIsPasswordProtected] = useState(false);
   const [isEncryptionEnabled, setIsEncryptionEnabled] = useState(false);
@@ -133,17 +134,19 @@ export const AuthProvider = ({ children }) => {
     checkSecurityStatus
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+  return React.createElement(
+    AuthContext.Provider,
+    { value },
+    children
   );
 };
 
-export const useAuth = () => {
+const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}; 
+};
+
+module.exports = { AuthProvider, useAuth }; 

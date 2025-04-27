@@ -1,11 +1,11 @@
-export function formatCurrency(amount, currency = 'USD') {
+function formatCurrency(amount, currency = 'USD') {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency
   }).format(amount);
 }
 
-export function formatDate(date, format = 'medium') {
+function formatDate(date, format = 'medium') {
   const dateObj = new Date(date);
   const formats = {
     short: { dateStyle: 'short' },
@@ -17,7 +17,7 @@ export function formatDate(date, format = 'medium') {
   return new Intl.DateTimeFormat('en-US', formats[format]).format(dateObj);
 }
 
-export function formatPercentage(value) {
+function formatPercentage(value) {
   return new Intl.NumberFormat('en-US', {
     style: 'percent',
     minimumFractionDigits: 2,
@@ -25,7 +25,7 @@ export function formatPercentage(value) {
   }).format(value);
 }
 
-export function formatNumber(value, options = {}) {
+function formatNumber(value, options = {}) {
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
@@ -33,7 +33,7 @@ export function formatNumber(value, options = {}) {
   }).format(value);
 }
 
-export function formatTimeAgo(date) {
+function formatTimeAgo(date) {
   const now = new Date();
   const diffInSeconds = Math.floor((now - new Date(date)) / 1000);
 
@@ -57,4 +57,12 @@ export function formatTimeAgo(date) {
   }
 
   return formatDate(date);
-} 
+}
+
+module.exports = {
+  formatCurrency,
+  formatDate,
+  formatPercentage,
+  formatNumber,
+  formatTimeAgo
+}; 

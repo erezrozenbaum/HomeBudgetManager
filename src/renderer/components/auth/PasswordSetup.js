@@ -1,72 +1,79 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { Button } from '../Button';
-import { FormInput } from '../FormInput';
-import { Card } from '../Card';
+const React = window.React;
+const { useAuth } = require('../../context/AuthContext');
+const { Button } = require('../Button');
+const { FormInput } = require('../FormInput');
+const { Card } = require('../Card');
 
-export const PasswordSetup = () => {
+const PasswordSetup = () => {
   const { setPassword } = useAuth();
-  const [password, setPasswordValue] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [newPassword, setNewPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [error, setError] = React.useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setSuccess(false);
 
-    if (password !== confirmPassword) {
+    if (newPassword !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters long');
-      return;
-    }
-
-    const success = await setPassword(password);
-    if (success) {
-      setSuccess(true);
-      setPasswordValue('');
-      setConfirmPassword('');
-    } else {
-      setError('Failed to set password');
+    try {
+      const success = await setPassword(newPassword);
+      if (!success) {
+        setError('Failed to set password. Please try again.');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
     }
   };
 
-  return (
-    <Card title="Set Up Password Protection">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <FormInput
-          label="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPasswordValue(e.target.value)}
-          required
-          minLength={8}
-        />
-        <FormInput
-          label="Confirm Password"
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-          minLength={8}
-        />
-        {error && (
-          <div className="text-red-500 text-sm">{error}</div>
-        )}
-        {success && (
-          <div className="text-green-500 text-sm">
-            Password protection enabled successfully
-          </div>
-        )}
-        <Button type="submit" className="w-full">
-          Enable Password Protection
-        </Button>
-      </form>
-    </Card>
+  return React.createElement(
+    Card,
+    {
+      title: 'Set Password',
+      className: 'max-w-md mx-auto mt-8'
+    },
+    React.createElement(
+      'form',
+      {
+        onSubmit: handleSubmit,
+        className: 'space-y-4'
+      },
+      React.createElement(
+        FormInput,
+        {
+          label: 'New Password',
+          name: 'newPassword',
+          type: 'password',
+          value: newPassword,
+          onChange: (e) => setNewPassword(e.target.value),
+          required: true
+        }
+      ),
+      React.createElement(
+        FormInput,
+        {
+          label: 'Confirm Password',
+          name: 'confirmPassword',
+          type: 'password',
+          value: confirmPassword,
+          onChange: (e) => setConfirmPassword(e.target.value),
+          error,
+          required: true
+        }
+      ),
+      React.createElement(
+        Button,
+        {
+          type: 'submit',
+          className: 'w-full'
+        },
+        'Set Password'
+      )
+    )
   );
-}; 
+};
+
+module.exports = { PasswordSetup }; 

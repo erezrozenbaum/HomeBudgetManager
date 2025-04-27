@@ -1,18 +1,26 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
-import App from './App';
-import './index.css';
+const React = window.React;
+const { createRoot } = require('react-dom/client');
+const { BrowserRouter } = require('react-router-dom');
+const { AuthProvider } = require('./context/AuthContext');
+const { ThemeProvider } = require('./context/ThemeContext');
+const { App } = require('./App');
+require('./index.css');
 
-const root = createRoot(document.getElementById('root'));
+const container = document.getElementById('root');
+const root = createRoot(container);
+
 root.render(
-  <Router>
-    <AuthProvider>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </AuthProvider>
-  </Router>
+  React.createElement(
+    BrowserRouter,
+    null,
+    React.createElement(
+      AuthProvider,
+      null,
+      React.createElement(
+        ThemeProvider,
+        null,
+        React.createElement(App)
+      )
+    )
+  )
 ); 

@@ -1,9 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { ipcRenderer } from 'electron';
+const React = window.React;
+const { createContext, useContext, useState, useEffect } = React;
+const { ipcRenderer } = require('electron');
 
 const ThemeContext = createContext();
 
-export const ThemeProvider = ({ children }) => {
+const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
   const [systemTheme, setSystemTheme] = useState('light');
 
@@ -52,19 +53,23 @@ export const ThemeProvider = ({ children }) => {
     isSystemTheme: theme === 'system'
   };
 
-  return (
-    <ThemeContext.Provider value={value}>
-      <div className={`${theme}-theme`}>
-        {children}
-      </div>
-    </ThemeContext.Provider>
+  return React.createElement(
+    ThemeContext.Provider,
+    { value },
+    React.createElement(
+      'div',
+      { className: `${theme}-theme` },
+      children
+    )
   );
 };
 
-export const useTheme = () => {
+const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
-}; 
+};
+
+module.exports = { ThemeProvider, useTheme }; 

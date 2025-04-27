@@ -1,5 +1,5 @@
-import * as XLSX from 'xlsx';
-import { validateDate, validateAmount, validateCurrency } from './validation';
+const XLSX = require('xlsx');
+const { validateDate, validateAmount, validateCurrency } = require('./validation');
 
 // Schema definitions for different data types
 const SCHEMAS = {
@@ -47,7 +47,7 @@ const SCHEMAS = {
 };
 
 // Export data to Excel
-export function exportToExcel(data, type) {
+function exportToExcel(data, type) {
   try {
     // Get schema for the data type
     const schema = SCHEMAS[type];
@@ -82,7 +82,7 @@ export function exportToExcel(data, type) {
 }
 
 // Import data from Excel
-export function importFromExcel(file, type) {
+function importFromExcel(file, type) {
   return new Promise((resolve, reject) => {
     try {
       const reader = new FileReader();
@@ -168,7 +168,7 @@ export function importFromExcel(file, type) {
 }
 
 // Download Excel file
-export function downloadExcel(data, type) {
+function downloadExcel(data, type) {
   try {
     const excelBuffer = exportToExcel(data, type);
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -187,7 +187,7 @@ export function downloadExcel(data, type) {
 }
 
 // Get Excel template for a specific type
-export function getExcelTemplate(type) {
+function getExcelTemplate(type) {
   const schema = SCHEMAS[type];
   if (!schema) {
     throw new Error(`Invalid data type: ${type}`);
@@ -209,7 +209,7 @@ export function getExcelTemplate(type) {
 }
 
 // Download Excel template
-export function downloadExcelTemplate(type) {
+function downloadExcelTemplate(type) {
   try {
     const excelBuffer = getExcelTemplate(type);
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -225,4 +225,12 @@ export function downloadExcelTemplate(type) {
     console.error('Error downloading Excel template:', error);
     throw error;
   }
-} 
+}
+
+module.exports = {
+  exportToExcel,
+  importFromExcel,
+  downloadExcel,
+  getExcelTemplate,
+  downloadExcelTemplate
+}; 

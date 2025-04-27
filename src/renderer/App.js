@@ -2,53 +2,110 @@
 
 const React = window.React;
 const ReactDOM = window.ReactDOM;
-const { BrowserRouter, Routes, Route } = window.ReactRouterDOM;
+const { Routes, Route } = require('react-router-dom');
+const { useAuth } = require('./context/AuthContext');
+const { useTheme } = require('./context/ThemeContext');
+const { useTimezone } = require('./context/TimezoneContext');
+const { useSecurity } = require('./context/SecurityContext');
 
 // Import components
-const { Sidebar } = require('./components/Sidebar.js');
-const { MainContent } = require('./components/MainContent.js');
-const { ErrorBoundary } = require('./components/ErrorBoundary.js');
-const { LoadingSpinner } = require('./components/LoadingSpinner.js');
-const { AuthProvider } = require('./context/AuthContext.js');
-const { ThemeProvider } = require('./context/ThemeContext.js');
+const { MainLayout } = require('./components/layout/MainLayout');
+const { Login } = require('./components/auth/Login');
+const { PasswordSetup } = require('./components/auth/PasswordSetup');
+const { SecuritySettings } = require('./components/auth/SecuritySettings');
+const { ProtectedRoute } = require('./components/auth/ProtectedRoute');
 
-function App() {
-    const [isLoading, setIsLoading] = React.useState(true);
+// Import pages
+const { Dashboard } = require('./pages/Dashboard');
+const { BankAccounts } = require('./pages/BankAccounts');
+const { CreditCards } = require('./pages/CreditCards');
+const { Transactions } = require('./pages/Transactions');
+const { Investments } = require('./pages/Investments');
+const { Goals } = require('./pages/Goals');
+const { Loans } = require('./pages/Loans');
+const { Insurances } = require('./pages/Insurances');
+const { Businesses } = require('./pages/Businesses');
+const { AIAdvisor } = require('./pages/AIAdvisor');
+const { Settings } = require('./pages/Settings');
 
-    React.useEffect(() => {
-        // Initialize app
-        const initApp = async () => {
-            try {
-                // Add any initialization logic here
-                setIsLoading(false);
-            } catch (error) {
-                console.error('Failed to initialize app:', error);
-                setIsLoading(false);
-            }
-        };
+const App = () => {
+    const { isAuthenticated, isPasswordProtected } = useAuth();
+    const { theme } = useTheme();
+    const { timezone } = useTimezone();
+    const { isSecurityEnabled } = useSecurity();
 
-        initApp();
-    }, []);
-
-    if (isLoading) {
-        return React.createElement(LoadingSpinner);
-    }
-
-    return React.createElement(ErrorBoundary, null,
-        React.createElement(BrowserRouter, null,
-            React.createElement(AuthProvider, null,
-                React.createElement(ThemeProvider, null,
-                    React.createElement('div', { className: 'app' },
-                        React.createElement('div', { className: 'container' },
-                            React.createElement(Sidebar),
-                            React.createElement(MainContent)
-                        )
-                    )
+    return React.createElement(
+        'div',
+        { className: `app ${theme}-theme` },
+        React.createElement(
+            Routes,
+            null,
+            React.createElement(Route, {
+                path: '/login',
+                element: React.createElement(Login)
+            }),
+            React.createElement(Route, {
+                path: '/password-setup',
+                element: React.createElement(PasswordSetup)
+            }),
+            React.createElement(Route, {
+                path: '/security-settings',
+                element: React.createElement(SecuritySettings)
+            }),
+            React.createElement(
+                ProtectedRoute,
+                { isAuthenticated, isPasswordProtected },
+                React.createElement(
+                    MainLayout,
+                    null,
+                    React.createElement(Route, {
+                        path: '/',
+                        element: React.createElement(Dashboard)
+                    }),
+                    React.createElement(Route, {
+                        path: '/bank-accounts',
+                        element: React.createElement(BankAccounts)
+                    }),
+                    React.createElement(Route, {
+                        path: '/credit-cards',
+                        element: React.createElement(CreditCards)
+                    }),
+                    React.createElement(Route, {
+                        path: '/transactions',
+                        element: React.createElement(Transactions)
+                    }),
+                    React.createElement(Route, {
+                        path: '/investments',
+                        element: React.createElement(Investments)
+                    }),
+                    React.createElement(Route, {
+                        path: '/goals',
+                        element: React.createElement(Goals)
+                    }),
+                    React.createElement(Route, {
+                        path: '/loans',
+                        element: React.createElement(Loans)
+                    }),
+                    React.createElement(Route, {
+                        path: '/insurances',
+                        element: React.createElement(Insurances)
+                    }),
+                    React.createElement(Route, {
+                        path: '/businesses',
+                        element: React.createElement(Businesses)
+                    }),
+                    React.createElement(Route, {
+                        path: '/ai-advisor',
+                        element: React.createElement(AIAdvisor)
+                    }),
+                    React.createElement(Route, {
+                        path: '/settings',
+                        element: React.createElement(Settings)
+                    })
                 )
             )
         )
     );
-}
+};
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App)); 
+module.exports = { App }; 

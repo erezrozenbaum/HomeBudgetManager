@@ -1,11 +1,12 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { ipcRenderer } from 'electron';
+const React = window.React;
+const { createContext, useState, useContext, useEffect } = React;
+const { ipcRenderer } = require('electron');
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -64,11 +65,15 @@ export const AuthProvider = ({ children }) => {
     register
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
+  return React.createElement(
+    AuthContext.Provider,
+    { value: value },
+    !loading && children
   );
 };
 
-export default AuthContext; 
+module.exports = {
+  AuthContext,
+  useAuth,
+  AuthProvider
+}; 

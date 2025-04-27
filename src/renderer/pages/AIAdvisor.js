@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+const React = window.React;
+const { useState } = React;
+const { useAuth } = require('../contexts/AuthContext');
 
 const AIAdvisor = () => {
   const { user } = useAuth();
@@ -18,23 +19,29 @@ const AIAdvisor = () => {
     }
   };
 
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">AI Financial Advisor</h1>
-      <button
-        onClick={getFinancialAdvice}
-        disabled={loading}
-        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 disabled:opacity-50"
-      >
-        {loading ? 'Generating Advice...' : 'Get Financial Advice'}
-      </button>
-      {advice && (
-        <div className="mt-4 p-4 bg-gray-100 rounded">
-          <p>{advice}</p>
-        </div>
-      )}
-    </div>
+  return React.createElement(
+    'div',
+    { className: 'p-6' },
+    React.createElement(
+      'h1',
+      { className: 'text-2xl font-bold mb-4' },
+      'AI Financial Advisor'
+    ),
+    React.createElement(
+      'button',
+      {
+        onClick: getFinancialAdvice,
+        disabled: loading,
+        className: 'bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 disabled:opacity-50'
+      },
+      loading ? 'Generating Advice...' : 'Get Financial Advice'
+    ),
+    advice && React.createElement(
+      'div',
+      { className: 'mt-4 p-4 bg-gray-100 rounded' },
+      React.createElement('p', null, advice)
+    )
   );
 };
 
-export default AIAdvisor; 
+module.exports = { AIAdvisor }; 

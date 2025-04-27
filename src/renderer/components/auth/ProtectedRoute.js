@@ -1,24 +1,24 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { LoadingSpinner } from '../LoadingSpinner';
+const React = window.React;
+const { Navigate } = require('react-router-dom');
+const { useAuth } = require('../../context/AuthContext');
+const { LoadingSpinner } = require('../LoadingSpinner');
 
-export const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isPasswordProtected, isLoading } = useAuth();
+const ProtectedRoute = ({ children, isAuthenticated, isPasswordProtected }) => {
+  const { isLoading } = useAuth();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner />
-      </div>
+    return React.createElement(
+      'div',
+      { className: 'flex items-center justify-center min-h-screen' },
+      React.createElement(LoadingSpinner)
     );
   }
 
-  // If password protection is enabled but user is not authenticated
   if (isPasswordProtected && !isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return React.createElement(Navigate, { to: '/login', replace: true });
   }
 
-  // If no password protection or user is authenticated
   return children;
-}; 
+};
+
+module.exports = { ProtectedRoute }; 

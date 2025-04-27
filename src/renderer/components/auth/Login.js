@@ -1,42 +1,62 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { Button } from '../Button';
-import { FormInput } from '../FormInput';
-import { Card } from '../Card';
+const React = window.React;
+const { useAuth } = require('../../context/AuthContext');
+const { Button } = require('../Button');
+const { FormInput } = require('../FormInput');
+const { Card } = require('../Card');
 
-export const Login = () => {
+const Login = () => {
   const { verifyPassword } = useAuth();
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [password, setPassword] = React.useState('');
+  const [error, setError] = React.useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    const isValid = await verifyPassword(password);
-    if (!isValid) {
-      setError('Invalid password');
-      setPassword('');
+    
+    try {
+      const success = await verifyPassword(password);
+      if (!success) {
+        setError('Invalid password');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
     }
   };
 
-  return (
-    <Card title="Enter Password">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <FormInput
-          label="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error && (
-          <div className="text-red-500 text-sm">{error}</div>
-        )}
-        <Button type="submit" className="w-full">
-          Unlock
-        </Button>
-      </form>
-    </Card>
+  return React.createElement(
+    Card,
+    {
+      title: 'Login',
+      className: 'max-w-md mx-auto mt-8'
+    },
+    React.createElement(
+      'form',
+      {
+        onSubmit: handleSubmit,
+        className: 'space-y-4'
+      },
+      React.createElement(
+        FormInput,
+        {
+          label: 'Password',
+          name: 'password',
+          type: 'password',
+          value: password,
+          onChange: (e) => setPassword(e.target.value),
+          error,
+          required: true
+        }
+      ),
+      React.createElement(
+        Button,
+        {
+          type: 'submit',
+          className: 'w-full'
+        },
+        'Login'
+      )
+    )
   );
-}; 
+};
+
+module.exports = { Login }; 

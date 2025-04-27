@@ -1,10 +1,11 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { ipcRenderer } from 'electron';
-import { format, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+const React = window.React;
+const { createContext, useState, useEffect, useContext } = React;
+const { ipcRenderer } = require('electron');
+const { format, utcToZonedTime, zonedTimeToUtc } = require('date-fns-tz');
 
 const TimezoneContext = createContext();
 
-export const TimezoneProvider = ({ children }) => {
+const TimezoneProvider = ({ children }) => {
   const [timezone, setTimezone] = useState('UTC');
   const [timeFormat, setTimeFormat] = useState('24h');
   const [dateFormat, setDateFormat] = useState('MM/dd/yyyy');
@@ -84,17 +85,19 @@ export const TimezoneProvider = ({ children }) => {
     convertToUTC
   };
 
-  return (
-    <TimezoneContext.Provider value={value}>
-      {children}
-    </TimezoneContext.Provider>
+  return React.createElement(
+    TimezoneContext.Provider,
+    { value },
+    children
   );
 };
 
-export const useTimezone = () => {
+const useTimezone = () => {
   const context = useContext(TimezoneContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useTimezone must be used within a TimezoneProvider');
   }
   return context;
-}; 
+};
+
+module.exports = { TimezoneProvider, useTimezone }; 

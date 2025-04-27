@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Tab } from '@headlessui/react';
+const React = window.React;
+const { useState } = React;
+const { Tab } = require('@headlessui/react');
 
 const Documentation = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -248,17 +249,17 @@ const Documentation = () => {
               steps: [
                 'Click "Reports" in the sidebar',
                 'Select report type (Summary, Detailed, Custom)',
-                'Choose time period',
-                'Select accounts/categories',
-                'Generate report'
+                'Choose date range',
+                'Export or print the report'
               ]
             },
             {
-              title: 'Exporting Data',
+              title: 'Analytics Features',
               items: [
-                'Select export format (PDF, Excel, CSV)',
-                'Choose data range',
-                'Download file'
+                'View spending trends',
+                'Analyze investment performance',
+                'Track goal progress',
+                'Monitor debt reduction'
               ]
             }
           ]
@@ -333,103 +334,101 @@ const Documentation = () => {
     }
   ];
 
-  return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">User Manual</h1>
-      
-      <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
-        <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1 mb-6">
-          {sections.map((section, index) => (
-            <Tab
-              key={index}
-              className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5
-                ${selected
-                  ? 'bg-white shadow text-blue-700'
-                  : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
+  const renderContent = (content) => {
+    if (content.steps) {
+      return React.createElement(
+        'ol',
+        { className: 'list-decimal pl-5 space-y-2' },
+        content.steps.map((step, index) =>
+          React.createElement('li', { key: index }, step)
+        )
+      );
+    }
+    if (content.items) {
+      return React.createElement(
+        'ul',
+        { className: 'list-disc pl-5 space-y-2' },
+        content.items.map((item, index) =>
+          React.createElement('li', { key: index }, item)
+        )
+      );
+    }
+    if (content.subsections) {
+      return content.subsections.map((subsection, index) =>
+        React.createElement(
+          'div',
+          { key: index, className: 'mb-6' },
+          React.createElement(
+            'h3',
+            { className: 'text-lg font-semibold mb-2' },
+            subsection.title
+          ),
+          renderContent(subsection)
+        )
+      );
+    }
+    return null;
+  };
+
+  return React.createElement(
+    'div',
+    { className: 'max-w-4xl mx-auto p-6' },
+    React.createElement('h1', { className: 'text-3xl font-bold mb-8' }, 'Documentation'),
+    React.createElement(
+      Tab.Group,
+      { selectedIndex: selectedTab, onChange: setSelectedTab },
+      React.createElement(
+        Tab.List,
+        { className: 'flex space-x-1 rounded-xl bg-blue-900/20 p-1 mb-6' },
+        sections.map((section, index) =>
+          React.createElement(
+            Tab,
+            {
+              key: index,
+              className: ({ selected }) =>
+                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 ${
+                  selected
+                    ? 'bg-white shadow text-blue-700'
+                    : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
                 }`
-              }
-            >
-              {section.title}
-            </Tab>
-          ))}
-        </Tab.List>
-        
-        <Tab.Panels className="mt-2">
-          {sections.map((section, index) => (
-            <Tab.Panel
-              key={index}
-              className="rounded-xl bg-white p-6 shadow-lg"
-            >
-              <div className="space-y-8">
-                {section.content.map((content, contentIndex) => (
-                  <div key={contentIndex} className="space-y-4">
-                    <h2 className="text-2xl font-semibold">{content.title}</h2>
-                    
-                    {content.description && (
-                      <p className="text-gray-600">{content.description}</p>
-                    )}
-                    
-                    {content.steps && (
-                      <ol className="list-decimal list-inside space-y-2">
-                        {content.steps.map((step, stepIndex) => (
-                          <li key={stepIndex} className="text-gray-700">
-                            {step}
-                          </li>
-                        ))}
-                      </ol>
-                    )}
-                    
-                    {content.items && (
-                      <ul className="list-disc list-inside space-y-2">
-                        {content.items.map((item, itemIndex) => (
-                          <li key={itemIndex} className="text-gray-700">
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    
-                    {content.subsections && (
-                      <div className="space-y-6">
-                        {content.subsections.map((subsection, subsectionIndex) => (
-                          <div key={subsectionIndex} className="ml-4">
-                            <h3 className="text-xl font-medium mb-2">
-                              {subsection.title}
-                            </h3>
-                            
-                            {subsection.steps && (
-                              <ol className="list-decimal list-inside space-y-2">
-                                {subsection.steps.map((step, stepIndex) => (
-                                  <li key={stepIndex} className="text-gray-700">
-                                    {step}
-                                  </li>
-                                ))}
-                              </ol>
-                            )}
-                            
-                            {subsection.items && (
-                              <ul className="list-disc list-inside space-y-2">
-                                {subsection.items.map((item, itemIndex) => (
-                                  <li key={itemIndex} className="text-gray-700">
-                                    {item}
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </Tab.Panel>
-          ))}
-        </Tab.Panels>
-      </Tab.Group>
-    </div>
+            },
+            section.title
+          )
+        )
+      ),
+      React.createElement(
+        Tab.Panels,
+        { className: 'mt-2' },
+        sections.map((section, index) =>
+          React.createElement(
+            Tab.Panel,
+            {
+              key: index,
+              className: 'rounded-xl bg-white p-6 shadow-lg'
+            },
+            section.content.map((item, itemIndex) =>
+              React.createElement(
+                'div',
+                { key: itemIndex, className: 'mb-8' },
+                React.createElement(
+                  'h2',
+                  { className: 'text-xl font-semibold mb-4' },
+                  item.title
+                ),
+                item.description &&
+                  React.createElement(
+                    'p',
+                    { className: 'mb-4 text-gray-600' },
+                    item.description
+                  ),
+                renderContent(item)
+              )
+            )
+          )
+        )
+      )
+    )
   );
 };
 
-export default Documentation; 
+module.exports = Documentation; 

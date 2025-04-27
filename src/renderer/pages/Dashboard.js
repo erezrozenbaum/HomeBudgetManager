@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Line, Bar, Pie } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
+const React = window.React;
+const { useState, useEffect } = React;
+const { Line, Bar, Pie } = require('react-chartjs-2');
+const ChartJS = require('chart.js').Chart;
+const {
   CategoryScale,
   LinearScale,
   PointElement,
@@ -11,7 +12,7 @@ import {
   Title,
   Tooltip,
   Legend
-} from 'chart.js';
+} = require('chart.js');
 
 ChartJS.register(
   CategoryScale,
@@ -67,48 +68,100 @@ const Dashboard = () => {
     ],
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-        <select
-          value={timeRange}
-          onChange={(e) => setTimeRange(e.target.value)}
-          className="px-4 py-2 border rounded-lg"
-        >
-          <option value="week">Last Week</option>
-          <option value="month">Last Month</option>
-          <option value="year">Last Year</option>
-        </select>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-700">Net Balance</h3>
-          <p className="text-3xl font-bold text-gray-900">${summaryData.netBalance}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-700">Total Income</h3>
-          <p className="text-3xl font-bold text-green-600">${summaryData.totalIncome}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-700">Total Expenses</h3>
-          <p className="text-3xl font-bold text-red-600">${summaryData.totalExpenses}</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Income vs Expenses</h3>
-          <Line data={incomeExpenseData} />
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Category Breakdown</h3>
-          <Pie data={categoryData} />
-        </div>
-      </div>
-    </div>
+  return React.createElement(
+    'div',
+    { className: 'space-y-6' },
+    React.createElement(
+      'div',
+      { className: 'flex justify-between items-center' },
+      React.createElement(
+        'h1',
+        { className: 'text-2xl font-bold text-gray-800' },
+        'Dashboard'
+      ),
+      React.createElement(
+        'select',
+        {
+          value: timeRange,
+          onChange: (e) => setTimeRange(e.target.value),
+          className: 'px-4 py-2 border rounded-lg'
+        },
+        React.createElement('option', { value: 'week' }, 'Last Week'),
+        React.createElement('option', { value: 'month' }, 'Last Month'),
+        React.createElement('option', { value: 'year' }, 'Last Year')
+      )
+    ),
+    React.createElement(
+      'div',
+      { className: 'grid grid-cols-1 md:grid-cols-3 gap-6' },
+      React.createElement(
+        'div',
+        { className: 'bg-white p-6 rounded-lg shadow' },
+        React.createElement(
+          'h3',
+          { className: 'text-lg font-semibold text-gray-700' },
+          'Net Balance'
+        ),
+        React.createElement(
+          'p',
+          { className: 'text-3xl font-bold text-gray-900' },
+          `$${summaryData.netBalance}`
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'bg-white p-6 rounded-lg shadow' },
+        React.createElement(
+          'h3',
+          { className: 'text-lg font-semibold text-gray-700' },
+          'Total Income'
+        ),
+        React.createElement(
+          'p',
+          { className: 'text-3xl font-bold text-green-600' },
+          `$${summaryData.totalIncome}`
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'bg-white p-6 rounded-lg shadow' },
+        React.createElement(
+          'h3',
+          { className: 'text-lg font-semibold text-gray-700' },
+          'Total Expenses'
+        ),
+        React.createElement(
+          'p',
+          { className: 'text-3xl font-bold text-red-600' },
+          `$${summaryData.totalExpenses}`
+        )
+      )
+    ),
+    React.createElement(
+      'div',
+      { className: 'grid grid-cols-1 lg:grid-cols-2 gap-6' },
+      React.createElement(
+        'div',
+        { className: 'bg-white p-6 rounded-lg shadow' },
+        React.createElement(
+          'h3',
+          { className: 'text-lg font-semibold text-gray-700 mb-4' },
+          'Income vs Expenses'
+        ),
+        React.createElement(Line, { data: incomeExpenseData })
+      ),
+      React.createElement(
+        'div',
+        { className: 'bg-white p-6 rounded-lg shadow' },
+        React.createElement(
+          'h3',
+          { className: 'text-lg font-semibold text-gray-700 mb-4' },
+          'Category Breakdown'
+        ),
+        React.createElement(Pie, { data: categoryData })
+      )
+    )
   );
 };
 
-export default Dashboard; 
+module.exports = { Dashboard }; 

@@ -1,130 +1,77 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { Button } from '../Button';
-import { FormInput } from '../FormInput';
-import { Card } from '../Card';
+const React = window.React;
+const { useAuth } = require('../../context/AuthContext');
+const { Button } = require('../Button');
+const { FormInput } = require('../FormInput');
+const { Card } = require('../Card');
 
-export const SecuritySettings = () => {
-  const {
-    isPasswordProtected,
-    isEncryptionEnabled,
-    setEncryption,
-    disableEncryption,
-    removePassword
-  } = useAuth();
-
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [encryptionKey, setEncryptionKey] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const handleEnableEncryption = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (!encryptionKey) {
-      setError('Encryption key is required');
-      return;
-    }
-
-    const success = await setEncryption(encryptionKey);
-    if (success) {
-      setSuccess('Encryption enabled successfully');
-      setEncryptionKey('');
-    } else {
-      setError('Failed to enable encryption');
-    }
-  };
-
-  const handleDisableEncryption = async () => {
-    setError('');
-    setSuccess('');
-
-    const success = await disableEncryption();
-    if (success) {
-      setSuccess('Encryption disabled successfully');
-    } else {
-      setError('Failed to disable encryption');
-    }
-  };
+const SecuritySettings = () => {
+  const { isPasswordProtected, removePassword } = useAuth();
+  const [currentPassword, setCurrentPassword] = React.useState('');
+  const [error, setError] = React.useState('');
+  const [success, setSuccess] = React.useState('');
 
   const handleRemovePassword = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
-    if (!currentPassword) {
-      setError('Current password is required');
-      return;
-    }
-
-    const success = await removePassword(currentPassword);
-    if (success) {
-      setSuccess('Password protection removed successfully');
-      setCurrentPassword('');
-    } else {
-      setError('Failed to remove password protection');
+    try {
+      const success = await removePassword(currentPassword);
+      if (success) {
+        setSuccess('Password protection has been removed');
+        setCurrentPassword('');
+      } else {
+        setError('Invalid password');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
     }
   };
 
-  return (
-    <div className="space-y-6">
-      <Card title="Encryption Settings">
-        {!isEncryptionEnabled ? (
-          <form onSubmit={handleEnableEncryption} className="space-y-4">
-            <FormInput
-              label="Encryption Key"
-              type="password"
-              value={encryptionKey}
-              onChange={(e) => setEncryptionKey(e.target.value)}
-              required
-            />
-            <Button type="submit" className="w-full">
-              Enable Encryption
-            </Button>
-          </form>
-        ) : (
-          <div className="space-y-4">
-            <p className="text-green-500">Encryption is enabled</p>
-            <Button
-              onClick={handleDisableEncryption}
-              variant="danger"
-              className="w-full"
-            >
-              Disable Encryption
-            </Button>
-          </div>
-        )}
-      </Card>
-
-      {isPasswordProtected && (
-        <Card title="Password Protection">
-          <form onSubmit={handleRemovePassword} className="space-y-4">
-            <FormInput
-              label="Current Password"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              required
-            />
-            <Button
-              type="submit"
-              variant="danger"
-              className="w-full"
-            >
-              Remove Password Protection
-            </Button>
-          </form>
-        </Card>
-      )}
-
-      {error && (
-        <div className="text-red-500 text-sm">{error}</div>
-      )}
-      {success && (
-        <div className="text-green-500 text-sm">{success}</div>
-      )}
-    </div>
+  return React.createElement(
+    Card,
+    {
+      title: 'Security Settings',
+      className: 'max-w-md mx-auto mt-8'
+    },
+    React.createElement(
+      'div',
+      { className: 'space-y-4' },
+      isPasswordProtected && React.createElement(
+        'form',
+        {
+          onSubmit: handleRemovePassword,
+          className: 'space-y-4'
+        },
+        React.createElement(
+          FormInput,
+          {
+            label: 'Current Password',
+            name: 'currentPassword',
+            type: 'password',
+            value: currentPassword,
+            onChange: (e) => setCurrentPassword(e.target.value),
+            error,
+            required: true
+          }
+        ),
+        React.createElement(
+          Button,
+          {
+            type: 'submit',
+            variant: 'danger',
+            className: 'w-full'
+          },
+          'Remove Password Protection'
+        )
+      ),
+      success && React.createElement(
+        'div',
+        { className: 'text-green-500 text-sm' },
+        success
+      )
+    )
   );
-}; 
+};
+
+module.exports = { SecuritySettings }; 

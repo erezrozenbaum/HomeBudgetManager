@@ -17,7 +17,7 @@ async function request(endpoint, options = {}) {
 }
 
 // Bank Accounts
-export const bankAccounts = {
+const bankAccounts = {
   getAll: () => request('/bank-accounts'),
   getById: (id) => request(`/bank-accounts/${id}`),
   create: (data) => request('/bank-accounts', { method: 'POST', body: JSON.stringify(data) }),
@@ -26,7 +26,7 @@ export const bankAccounts = {
 };
 
 // Credit Cards
-export const creditCards = {
+const creditCards = {
   getAll: () => request('/credit-cards'),
   getById: (id) => request(`/credit-cards/${id}`),
   create: (data) => request('/credit-cards', { method: 'POST', body: JSON.stringify(data) }),
@@ -35,7 +35,7 @@ export const creditCards = {
 };
 
 // Transactions
-export const transactions = {
+const transactions = {
   getAll: () => request('/transactions'),
   getById: (id) => request(`/transactions/${id}`),
   create: (data) => request('/transactions', { method: 'POST', body: JSON.stringify(data) }),
@@ -44,7 +44,7 @@ export const transactions = {
 };
 
 // Investments
-export const investments = {
+const investments = {
   getAll: () => request('/investments'),
   getById: (id) => request(`/investments/${id}`),
   create: (data) => request('/investments', { method: 'POST', body: JSON.stringify(data) }),
@@ -53,7 +53,7 @@ export const investments = {
 };
 
 // Saving Goals
-export const savingGoals = {
+const savingGoals = {
   getAll: () => request('/saving-goals'),
   getById: (id) => request(`/saving-goals/${id}`),
   create: (data) => request('/saving-goals', { method: 'POST', body: JSON.stringify(data) }),
@@ -62,7 +62,7 @@ export const savingGoals = {
 };
 
 // Loans
-export const loans = {
+const loans = {
   getAll: () => request('/loans'),
   getById: (id) => request(`/loans/${id}`),
   create: (data) => request('/loans', { method: 'POST', body: JSON.stringify(data) }),
@@ -71,7 +71,7 @@ export const loans = {
 };
 
 // Insurances
-export const insurances = {
+const insurances = {
   getAll: () => request('/insurances'),
   getById: (id) => request(`/insurances/${id}`),
   create: (data) => request('/insurances', { method: 'POST', body: JSON.stringify(data) }),
@@ -80,7 +80,7 @@ export const insurances = {
 };
 
 // Businesses
-export const businesses = {
+const businesses = {
   getAll: () => request('/businesses'),
   getById: (id) => request(`/businesses/${id}`),
   create: (data) => request('/businesses', { method: 'POST', body: JSON.stringify(data) }),
@@ -89,18 +89,18 @@ export const businesses = {
 };
 
 // AI Financial Advisor
-export const aiAdvisor = {
+const aiAdvisor = {
   getInsights: (query) => request('/ai-advisor/insights', { method: 'POST', body: JSON.stringify({ query }) }),
 };
 
 // Dashboard
-export const dashboard = {
+const dashboard = {
   getData: (timeRange, accounts) => request('/dashboard', { method: 'POST', body: JSON.stringify({ timeRange, accounts }) }),
   exportReport: (format) => request(`/dashboard/export?format=${format}`),
 };
 
 // Settings
-export const settings = {
+const settings = {
   get: () => request('/settings'),
   update: (data) => request('/settings', { method: 'POST', body: JSON.stringify(data) }),
   importData: (file) => {
@@ -109,4 +109,18 @@ export const settings = {
     return request('/settings/import', { method: 'POST', body: formData });
   },
   exportData: () => request('/settings/export'),
+};
+
+module.exports = {
+  bankAccounts,
+  creditCards,
+  transactions,
+  investments,
+  savingGoals,
+  loans,
+  insurances,
+  businesses,
+  aiAdvisor,
+  dashboard,
+  settings
 }; 

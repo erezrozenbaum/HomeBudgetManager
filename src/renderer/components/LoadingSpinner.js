@@ -1,27 +1,29 @@
-import React from 'react';
+const React = window.React;
 
-function LoadingSpinner({ size = 'md', color = 'primary' }) {
-  const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-8 w-8',
-    lg: 'h-12 w-12'
+const LoadingSpinner = ({ size = 'medium', className = '' }) => {
+  const sizes = {
+    small: 'w-4 h-4',
+    medium: 'w-8 h-8',
+    large: 'w-12 h-12'
   };
 
-  const colorClasses = {
-    primary: 'border-primary-500',
-    white: 'border-white',
-    gray: 'border-gray-500'
-  };
-
-  return (
-    <div className="flex justify-center items-center">
-      <div
-        className={`animate-spin rounded-full border-2 border-t-transparent ${
-          sizeClasses[size]
-        } ${colorClasses[color]}`}
-      />
-    </div>
+  return React.createElement(
+    'div',
+    {
+      className: `flex items-center justify-center ${className}`
+    },
+    React.createElement(
+      'div',
+      {
+        className: `
+          ${sizes[size]}
+          border-4 border-gray-200 dark:border-gray-700
+          border-t-blue-500 dark:border-t-blue-400
+          rounded-full animate-spin
+        `
+      }
+    )
   );
-}
+};
 
-export default LoadingSpinner; 
+module.exports = { LoadingSpinner }; 

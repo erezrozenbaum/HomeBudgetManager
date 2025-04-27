@@ -1,73 +1,59 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+const React = window.React;
+const { Link, useLocation } = require('react-router-dom');
 
 const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
 
-  const menuItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { path: '/transactions', label: 'Transactions', icon: '💰' },
-    { path: '/accounts', label: 'Accounts', icon: '🏦' },
-    { 
-      path: '/investments', 
-      label: 'Investments', 
-      icon: '📈',
-      subItems: [
-        { path: '/investments/stocks', label: 'Stocks', icon: '📊' },
-        { path: '/investments/crypto', label: 'Crypto', icon: '₿' },
-        { path: '/investments/real-estate', label: 'Real Estate', icon: '🏠' }
-      ]
-    },
-    { path: '/reports', label: 'Reports', icon: '📑' },
-    { path: '/ai-advisor', label: 'AI Advisor', icon: '🤖' },
-    { path: '/settings', label: 'Settings', icon: '⚙️' }
+  const navigation = [
+    { name: 'Dashboard', href: '/', icon: '📊' },
+    { name: 'Transactions', href: '/transactions', icon: '💸' },
+    { name: 'Budgets', href: '/budgets', icon: '💰' },
+    { name: 'Reports', href: '/reports', icon: '📈' },
+    { name: 'Settings', href: '/settings', icon: '⚙️' }
   ];
 
-  return (
-    <div className={`bg-gray-800 text-white h-screen fixed left-0 top-0 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
-      <div className="p-4 flex items-center justify-between">
-        {!isCollapsed && <h1 className="text-xl font-bold">MyBudgetManager</h1>}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 hover:bg-gray-700 rounded"
-        >
-          {isCollapsed ? '→' : '←'}
-        </button>
-      </div>
-      <nav className="mt-8">
-        {menuItems.map((item) => (
-          <div key={item.path}>
-            <Link
-              to={item.path}
-              className={`flex items-center p-4 hover:bg-gray-700 ${
-                location.pathname === item.path ? 'bg-gray-700' : ''
-              }`}
-            >
-              <span className="text-xl mr-3">{item.icon}</span>
-              {!isCollapsed && <span>{item.label}</span>}
-            </Link>
-            {!isCollapsed && item.subItems && (
-              <div className="ml-8">
-                {item.subItems.map((subItem) => (
-                  <Link
-                    key={subItem.path}
-                    to={subItem.path}
-                    className={`flex items-center p-2 hover:bg-gray-700 ${
-                      location.pathname === subItem.path ? 'bg-gray-700' : ''
-                    }`}
-                  >
-                    <span className="text-xl mr-3">{subItem.icon}</span>
-                    <span>{subItem.label}</span>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </nav>
-    </div>
+  return React.createElement(
+    'div',
+    { className: 'bg-gray-800 w-64 min-h-screen' },
+    React.createElement(
+      'div',
+      { className: 'flex flex-col h-full' },
+      React.createElement(
+        'div',
+        { className: 'flex items-center justify-center h-16 bg-gray-900' },
+        React.createElement(
+          'span',
+          { className: 'text-white text-xl font-bold' },
+          'Menu'
+        )
+      ),
+      React.createElement(
+        'nav',
+        { className: 'flex-1 px-2 py-4 space-y-1' },
+        navigation.map((item) => {
+          const isActive = location.pathname === item.href;
+          return React.createElement(
+            Link,
+            {
+              key: item.name,
+              to: item.href,
+              className: `flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                isActive
+                  ? 'bg-gray-900 text-white'
+                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+              }`
+            },
+            React.createElement(
+              'span',
+              { className: 'mr-3' },
+              item.icon
+            ),
+            item.name
+          );
+        })
+      )
+    )
   );
 };
 
-export default Sidebar; 
+module.exports = { Sidebar }; 

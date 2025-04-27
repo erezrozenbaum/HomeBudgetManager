@@ -1,13 +1,13 @@
-import axios from 'axios';
-import { useAuth } from '../contexts/AuthContext';
+const axios = require('axios');
+const { useAuth } = require('../context/AuthContext');
 
-const api = axios.create({
+const api = {
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
-});
+};
 
 // Request interceptor
 api.interceptors.request.use(
@@ -67,7 +67,7 @@ api.interceptors.response.use(
 );
 
 // API methods
-export const stocksApi = {
+const stocksApi = {
   getAll: () => api.get('/stocks'),
   getDetails: (symbol) => api.get(`/stocks/${symbol}`),
   getHistory: (symbol, period) => api.get(`/stocks/${symbol}/history?period=${period}`),
@@ -81,7 +81,7 @@ export const stocksApi = {
 };
 
 // WebSocket setup for real-time updates
-export const setupWebSocket = (onMessage) => {
+const setupWebSocket = (onMessage) => {
   const ws = new WebSocket(process.env.REACT_APP_WS_URL || 'ws://localhost:3001');
 
   ws.onopen = () => {
@@ -111,4 +111,8 @@ export const setupWebSocket = (onMessage) => {
   return ws;
 };
 
-export default api; 
+module.exports = {
+  api,
+  stocksApi,
+  setupWebSocket
+}; 
