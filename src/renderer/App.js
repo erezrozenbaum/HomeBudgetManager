@@ -1,7 +1,6 @@
 'use strict';
 
 const React = window.React;
-const ReactDOM = window.ReactDOM;
 const { Routes, Route } = require('react-router-dom');
 const { useAuth } = require('./context/AuthContext');
 const { useTheme } = require('./context/ThemeContext');

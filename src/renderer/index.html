@@ -14,6 +14,15 @@
 </head>
 <body>
     <div id="root"></div>
-    <script src="App.js"></script>
+    <script>
+        const { App } = require('./App');
+        const { BrowserRouter } = window.ReactRouterDOM;
+        const root = window.ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            window.React.createElement(BrowserRouter, null,
+                window.React.createElement(App)
+            )
+        );
+    </script>
 </body>
 </html> 

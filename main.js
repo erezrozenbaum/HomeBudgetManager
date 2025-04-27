@@ -168,8 +168,26 @@ function createWindow() {
         }
     });
 
+    // Set CSP header
+    mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+        callback({
+            responseHeaders: {
+                ...details.responseHeaders,
+                'Content-Security-Policy': [
+                    "default-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+                    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+                    "style-src 'self' 'unsafe-inline'; " +
+                    "img-src 'self' data:; " +
+                    "connect-src 'self' http://localhost:*"
+                ]
+            }
+        });
+    });
+
     // Open DevTools by default for debugging
-    mainWindow.webContents.openDevTools();
+    if (isDev) {
+        mainWindow.webContents.openDevTools();
+    }
 
     // Add error handling
     mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
