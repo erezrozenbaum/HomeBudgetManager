@@ -17,11 +17,11 @@
     <script>
         const { App } = require('./App');
         const { BrowserRouter } = window.ReactRouterDOM;
-        const root = window.ReactDOM.createRoot(document.getElementById('root'));
-        root.render(
+        window.ReactDOM.render(
             window.React.createElement(BrowserRouter, null,
                 window.React.createElement(App)
-            )
+            ),
+            document.getElementById('root')
         );
     </script>
 </body>
