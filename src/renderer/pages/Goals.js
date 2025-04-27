@@ -1,24 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-} from 'chart.js';
+const React = window.React;
+const { useState, useEffect } = React;
+const Chart = require('chart.js/auto');
+const { Line } = require('react-chartjs-2');
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+// Register Chart.js components
+Chart.register(
+  Chart.CategoryScale,
+  Chart.LinearScale,
+  Chart.PointElement,
+  Chart.LineElement,
+  Chart.Title,
+  Chart.Tooltip,
+  Chart.Legend
 );
 
 const Goals = () => {
