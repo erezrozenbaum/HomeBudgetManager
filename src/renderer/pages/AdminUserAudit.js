@@ -1,7 +1,7 @@
 const React = window.React;
 const { useState, useEffect } = React;
 const { format } = require('date-fns');
-const { useAuth } = require('../contexts/AuthContext');
+const { useAuth } = require('../context/AuthContext');
 const { api } = require('../utils/api');
 const { saveAs } = require('file-saver');
 const { SearchIcon, DownloadIcon, ChevronLeftIcon, ChevronRightIcon } = require('@heroicons/react/outline');

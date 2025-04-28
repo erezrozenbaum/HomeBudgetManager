@@ -1,6 +1,6 @@
 const React = window.React;
 const { useState } = React;
-const { useAuth } = require('../contexts/AuthContext');
+const { useAuth } = require('../context/AuthContext');
 
 const AIAdvisor = () => {
   const { user } = useAuth();

@@ -1,7 +1,7 @@
 const React = window.React;
 const { useState, useEffect } = React;
 const { format } = require('date-fns');
-const { useAuth } = require('../contexts/AuthContext');
+const { useAuth } = require('../context/AuthContext');
 const { api } = require('../utils/api');
 
 const UserAudit = () => {

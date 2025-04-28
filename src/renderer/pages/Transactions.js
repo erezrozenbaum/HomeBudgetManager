@@ -9,7 +9,7 @@ const BusinessTransactions = require('../components/transactions/BusinessTransac
 const TransactionForm = require('../components/transactions/TransactionForm').default;
 const TransactionImport = require('../components/transactions/TransactionImport').default;
 const TransactionTemplate = require('../components/transactions/TransactionTemplate').default;
-const { useAuth } = require('../contexts/AuthContext');
+const { useAuth } = require('../context/AuthContext');
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
