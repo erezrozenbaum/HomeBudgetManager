@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const Database = require('better-sqlite3');
 const fs = require('fs');
-const isDev = false; // Force production mode
+const isDev = process.env.NODE_ENV === 'development';
 
 let mainWindow;
 const localApi = express();
@@ -198,19 +198,19 @@ function createWindow() {
         // Attempt to reload on failure
         setTimeout(() => {
             console.log('Attempting to reload...');
-            mainWindow.loadFile(htmlPath).catch(err => {
+            mainWindow.loadFile(getIndexPath()).catch(err => {
                 console.error('Reload failed:', err);
                 console.error('Error stack:', err.stack);
             });
         }, 1000);
     });
 
-    // Load the index.html file from the correct location
-    const htmlPath = path.join(__dirname, 'renderer', 'index.html');
+    // Get the correct path for index.html
+    const indexPath = getIndexPath();
         
     console.log('Application paths:', {
         __dirname,
-        htmlPath,
+        indexPath,
         preloadPath: path.join(__dirname, 'preload.js'),
         appPath: app.getAppPath(),
         exePath: app.getPath('exe'),
@@ -218,23 +218,20 @@ function createWindow() {
     });
     
     console.log('File exists:', {
-        html: fs.existsSync(htmlPath),
-        preload: fs.existsSync(path.join(__dirname, 'preload.js')),
-        renderer: fs.existsSync(path.join(__dirname, 'renderer'))
+        html: fs.existsSync(indexPath),
+        preload: fs.existsSync(path.join(__dirname, 'preload.js'))
     });
     
     try {
-        const dirPath = path.dirname(htmlPath);
+        const dirPath = path.dirname(indexPath);
         console.log('Directory contents:', fs.readdirSync(dirPath));
-        
-        // Also check the app root directory
         console.log('App root contents:', fs.readdirSync(__dirname));
     } catch (err) {
         console.error('Failed to read directory:', err);
         console.error('Error stack:', err.stack);
     }
 
-    mainWindow.loadFile(htmlPath).catch(err => {
+    mainWindow.loadFile(indexPath).catch(err => {
         console.error('Failed to load file:', err);
         console.error('Error stack:', err.stack);
         
@@ -247,17 +244,45 @@ function createWindow() {
                     <h3>Paths:</h3>
                     <pre>${JSON.stringify({
                         __dirname,
-                        htmlPath,
-                        exists: fs.existsSync(htmlPath)
+                        indexPath,
+                        exists: fs.existsSync(indexPath)
                     }, null, 2)}</pre>
                 </body>
             </html>
         `);
     });
 
+    // Only open DevTools in development
+    if (isDev) {
+        mainWindow.webContents.openDevTools();
+    }
+
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+}
+
+// Helper function to get the correct index.html path
+function getIndexPath() {
+    if (isDev) {
+        return path.join(__dirname, 'src', 'renderer', 'index.html');
+    }
+    
+    // In production, check multiple possible locations
+    const possiblePaths = [
+        path.join(__dirname, 'renderer', 'index.html'),
+        path.join(__dirname, 'dist', 'renderer', 'index.html'),
+        path.join(app.getAppPath(), 'renderer', 'index.html')
+    ];
+
+    for (const p of possiblePaths) {
+        if (fs.existsSync(p)) {
+            return p;
+        }
+    }
+
+    // If no path is found, default to the standard production path
+    return path.join(__dirname, 'renderer', 'index.html');
 }
 
 app.whenReady().then(() => {

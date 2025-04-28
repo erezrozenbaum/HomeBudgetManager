@@ -12,7 +12,25 @@ try {
     const distDir = path.join(__dirname, '../src/renderer/dist');
     ensureDirectoryExists(distDir);
 
-    // Copy only the necessary files
+    // Create a bundle that includes React and ReactDOM
+    const bundleContent = `
+        // Load React and ReactDOM from node_modules
+        const React = require('react');
+        const ReactDOM = require('react-dom/client');
+        const { BrowserRouter } = require('react-router-dom');
+        const { AuthProvider } = require('../context/AuthContext');
+        const { ThemeProvider } = require('../context/ThemeContext');
+        
+        // Make them available globally
+        window.React = React;
+        window.ReactDOM = ReactDOM;
+        
+        // Load our app
+        require('../index.js');
+    `;
+    fs.writeFileSync(path.join(distDir, 'bundle.js'), bundleContent);
+
+    // Copy necessary files
     const filesToCopy = [
         'index.html',
         'index.js',
@@ -33,6 +51,7 @@ try {
     const dirsToCopy = [
         'components',
         'context',
+        'contexts',
         'pages',
         'services',
         'utils'
@@ -53,14 +72,6 @@ try {
             });
         }
     });
-
-    // Create a simple bundle.js that loads all dependencies
-    const bundleContent = `
-        window.React = require('react');
-        window.ReactDOM = require('react-dom/client');
-        require('./index.js');
-    `;
-    fs.writeFileSync(path.join(distDir, 'bundle.js'), bundleContent);
 
     // Update index.html to load bundle.js
     let htmlContent = fs.readFileSync(path.join(distDir, 'index.html'), 'utf8');

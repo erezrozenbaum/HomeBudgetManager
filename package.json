@@ -13,10 +13,10 @@
     "build:renderer": "node scripts/build-renderer.js",
     "prebuild": "npm run build:renderer",
     "build": "electron-builder",
-    "build:win": "npm run prebuild && electron-builder --win",
-    "build:mac": "npm run prebuild && electron-builder --mac",
-    "build:linux": "npm run prebuild && electron-builder --linux",
-    "build:all": "npm run prebuild && electron-builder -mwl"
+    "build:win": "cross-env NODE_ENV=production npm run prebuild && electron-builder --win",
+    "build:mac": "cross-env NODE_ENV=production npm run prebuild && electron-builder --mac",
+    "build:linux": "cross-env NODE_ENV=production npm run prebuild && electron-builder --linux",
+    "build:all": "cross-env NODE_ENV=production npm run prebuild && electron-builder -mwl"
   },
   "author": "Erez Rozenbaum",
   "license": "MIT",
@@ -76,6 +76,7 @@
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.17",
     "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "electron": "28.3.3",
     "electron-builder": "^24.13.3",
     "electron-icon-builder": "^2.0.1",
@@ -101,7 +102,7 @@
       "preload.js",
       "package.json",
       {
-        "from": "src/renderer",
+        "from": "src/renderer/dist",
         "to": "renderer",
         "filter": [
           "**/*"
