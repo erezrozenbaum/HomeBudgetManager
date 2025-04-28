@@ -4,7 +4,6 @@ const { BrowserRouter } = require('react-router-dom');
 const { AuthProvider } = require('./context/AuthContext');
 const { ThemeProvider } = require('./context/ThemeContext');
 const { App } = require('./App');
-require('./index.css');
 
 // Error boundary for the root component
 class ErrorBoundary extends React.Component {
