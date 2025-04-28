@@ -9,6 +9,7 @@
 # Production
 /build
 /dist
+src/renderer/dist/
 
 # Environment files
 .env
@@ -51,4 +52,5 @@ Thumbs.db
 
 # Temporary files
 *.tmp
-*.temp temp_asar/
+*.temp
+temp_asar/
