@@ -84,7 +84,7 @@
   },
   "build": {
     "appId": "com.homebudgetmanager.app",
-    "productName": "Home Budget Manager",
+    "productName": "HomeBudgetManager",
     "copyright": "Copyright © 2024 Erez Rozenbaum",
     "directories": {
       "output": "dist",
@@ -99,7 +99,8 @@
         "filter": [
           "**/*"
         ]
-      }
+      },
+      "node_modules"
     ],
     "extraResources": [
       {
@@ -118,34 +119,20 @@
       }
     ],
     "asarUnpack": [
-      "node_modules/better-sqlite3/**/*",
-      "scripts/init-database.js",
-      "node_modules/bcrypt/**/*",
-      "node_modules/node-schedule/**/*",
-      "node_modules/nodemailer/**/*"
+      "**/node_modules/better-sqlite3/**",
+      "**/node_modules/bcrypt/**",
+      "**/node_modules/node-schedule/**"
     ],
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
+      "target": "nsis",
       "icon": "build/icon.ico"
     },
     "mac": {
-      "target": [
-        "dmg"
-      ],
+      "target": "dmg",
       "icon": "build/icon.icns"
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ],
+      "target": "AppImage",
       "icon": "build/icon.png",
       "category": "Finance"
     },
@@ -154,7 +141,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Home Budget Manager",
+      "shortcutName": "HomeBudgetManager",
       "perMachine": true,
       "allowElevation": true
     }
