@@ -21,6 +21,20 @@ function deleteDirectoryRecursive(dir) {
     }
 }
 
+function copyDirectoryRecursive(source, destination) {
+    if (!fs.existsSync(source)) return;
+    ensureDirectoryExists(destination);
+    fs.readdirSync(source).forEach(item => {
+        const srcPath = path.join(source, item);
+        const destPath = path.join(destination, item);
+        if (fs.lstatSync(srcPath).isDirectory()) {
+            copyDirectoryRecursive(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+    });
+}
+
 try {
     // Ensure a clean dist directory
     const distDir = path.join(__dirname, '../src/renderer/dist');
@@ -76,17 +90,7 @@ try {
         if (dir === 'dist') return; // Never copy dist into itself
         const sourceDir = path.join(__dirname, '../src/renderer', dir);
         const destDir = path.join(distDir, dir);
-        if (fs.existsSync(sourceDir)) {
-            ensureDirectoryExists(destDir);
-            const files = fs.readdirSync(sourceDir);
-            files.forEach(file => {
-                if (file.endsWith('.js') || file.endsWith('.css')) {
-                    const sourcePath = path.join(sourceDir, file);
-                    const destPath = path.join(destDir, file);
-                    fs.copyFileSync(sourcePath, destPath);
-                }
-            });
-        }
+        copyDirectoryRecursive(sourceDir, destDir);
     });
 
     // Update index.html to load bundle.js
