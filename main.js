@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const Database = require('better-sqlite3');
 const fs = require('fs');
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = false; // Force production mode
 
 let mainWindow;
 const localApi = express();
@@ -184,9 +184,6 @@ function createWindow() {
         });
     });
 
-    // Open DevTools in both dev and production for debugging
-    mainWindow.webContents.openDevTools();
-
     // Add error handling
     mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
         console.error('Failed to load:', errorCode, errorDescription);
@@ -199,17 +196,9 @@ function createWindow() {
         }, 1000);
     });
 
-    // Add console logging
-    mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-        console.log('Renderer Console:', {level, message, line, sourceId});
-    });
-
     // Load the index.html file from the correct location
-    const htmlPath = isDev 
-        ? path.join(__dirname, 'src', 'renderer', 'index.html')
-        : path.join(__dirname, 'dist', 'renderer', 'index.html');
+    const htmlPath = path.join(__dirname, 'renderer', 'index.html');
         
-    console.log('Environment:', process.env.NODE_ENV);
     console.log('Loading from path:', htmlPath);
     console.log('Current directory:', __dirname);
     console.log('File exists:', fs.existsSync(htmlPath));
@@ -223,10 +212,6 @@ function createWindow() {
 
     mainWindow.loadFile(htmlPath).catch(err => {
         console.error('Failed to load file:', err);
-        // Try alternative path
-        const altPath = path.join(__dirname, 'renderer', 'index.html');
-        console.log('Trying alternative path:', altPath);
-        return mainWindow.loadFile(altPath);
     });
 
     mainWindow.on('closed', () => {
