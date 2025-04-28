@@ -1,32 +1,12 @@
-const { contextBridge, ipcRenderer } = require('electron');
-const path = require('path');
+const { contextBridge } = require('electron');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const ReactRouterDOM = require('react-router-dom');
 
-// Expose protected methods that allow the renderer process to use
-// the ipcRenderer without exposing the entire object
-contextBridge.exposeInMainWorld(
-    'api', {
-        send: (channel, data) => {
-            // whitelist channels
-            let validChannels = ['toMain'];
-            if (validChannels.includes(channel)) {
-                ipcRenderer.send(channel, data);
-            }
-        },
-        receive: (channel, func) => {
-            let validChannels = ['fromMain'];
-            if (validChannels.includes(channel)) {
-                // Deliberately strip event as it includes `sender` 
-                ipcRenderer.on(channel, (event, ...args) => func(...args));
-            }
-        }
-    }
-);
+// Expose required modules to renderer process
+contextBridge.exposeInMainWorld('React', React);
+contextBridge.exposeInMainWorld('ReactDOM', ReactDOM);
+contextBridge.exposeInMainWorld('ReactRouterDOM', ReactRouterDOM);
 
-// Expose React and ReactDOM to the renderer process
-contextBridge.exposeInMainWorld(
-    'React', require('react')
-);
-
-contextBridge.exposeInMainWorld(
-    'ReactDOM', require('react-dom')
-); 
+// Log that preload script has run
+console.log('Preload script executed successfully'); 

@@ -164,7 +164,8 @@ function createWindow() {
             contextIsolation: false,
             enableRemoteModule: true,
             webSecurity: true,
-            allowRunningInsecureContent: false
+            allowRunningInsecureContent: false,
+            preload: path.join(__dirname, 'preload.js')
         }
     });
 
@@ -187,11 +188,19 @@ function createWindow() {
     // Add error handling
     mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
         console.error('Failed to load:', errorCode, errorDescription);
+        console.error('Error details:', {
+            errorCode,
+            errorDescription,
+            currentURL: mainWindow.webContents.getURL(),
+            isDevToolsOpened: mainWindow.webContents.isDevToolsOpened()
+        });
+        
         // Attempt to reload on failure
         setTimeout(() => {
             console.log('Attempting to reload...');
             mainWindow.loadFile(htmlPath).catch(err => {
                 console.error('Reload failed:', err);
+                console.error('Error stack:', err.stack);
             });
         }, 1000);
     });
@@ -199,19 +208,51 @@ function createWindow() {
     // Load the index.html file from the correct location
     const htmlPath = path.join(__dirname, 'renderer', 'index.html');
         
-    console.log('Loading from path:', htmlPath);
-    console.log('Current directory:', __dirname);
-    console.log('File exists:', fs.existsSync(htmlPath));
+    console.log('Application paths:', {
+        __dirname,
+        htmlPath,
+        preloadPath: path.join(__dirname, 'preload.js'),
+        appPath: app.getAppPath(),
+        exePath: app.getPath('exe'),
+        userData: app.getPath('userData')
+    });
+    
+    console.log('File exists:', {
+        html: fs.existsSync(htmlPath),
+        preload: fs.existsSync(path.join(__dirname, 'preload.js')),
+        renderer: fs.existsSync(path.join(__dirname, 'renderer'))
+    });
     
     try {
         const dirPath = path.dirname(htmlPath);
         console.log('Directory contents:', fs.readdirSync(dirPath));
+        
+        // Also check the app root directory
+        console.log('App root contents:', fs.readdirSync(__dirname));
     } catch (err) {
         console.error('Failed to read directory:', err);
+        console.error('Error stack:', err.stack);
     }
 
     mainWindow.loadFile(htmlPath).catch(err => {
         console.error('Failed to load file:', err);
+        console.error('Error stack:', err.stack);
+        
+        // Try to show error in window
+        mainWindow.webContents.loadURL(`data:text/html;charset=utf-8,
+            <html>
+                <body>
+                    <h2>Error Loading Application</h2>
+                    <pre>${err.toString()}</pre>
+                    <h3>Paths:</h3>
+                    <pre>${JSON.stringify({
+                        __dirname,
+                        htmlPath,
+                        exists: fs.existsSync(htmlPath)
+                    }, null, 2)}</pre>
+                </body>
+            </html>
+        `);
     });
 
     mainWindow.on('closed', () => {
