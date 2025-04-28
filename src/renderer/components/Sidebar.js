@@ -1,7 +1,7 @@
 const React = window.React;
 const { NavLink } = require('react-router-dom');
-const { useAuth } = require('../context/AuthContext');
-const { useTheme } = require('../context/ThemeContext');
+const { useAuth } = require('./context/AuthContext');
+const { useTheme } = require('./context/ThemeContext');
 
 const navigation = [
   { name: 'Dashboard', path: '/', icon: '📊' },

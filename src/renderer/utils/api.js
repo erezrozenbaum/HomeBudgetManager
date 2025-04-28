@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { useAuth } = require('../context/AuthContext');
+const { useAuth } = require('./context/AuthContext');
 
 const api = {
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001/api',

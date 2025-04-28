@@ -33,8 +33,8 @@ try {
         const React = require('react');
         const ReactDOM = require('react-dom/client');
         const { BrowserRouter } = require('react-router-dom');
-        const { AuthProvider } = require('../context/AuthContext');
-        const { ThemeProvider } = require('../context/ThemeContext');
+        const { AuthProvider } = require('./context/AuthContext');
+        const { ThemeProvider } = require('./context/ThemeContext');
         
         // Make them available globally
         window.React = React;

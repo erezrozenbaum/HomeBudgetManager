@@ -164,8 +164,7 @@ function createWindow() {
             contextIsolation: false,
             enableRemoteModule: false,
             webSecurity: true,
-            allowRunningInsecureContent: false,
-            preload: path.join(__dirname, 'preload.js')
+            allowRunningInsecureContent: false
         }
     });
 
