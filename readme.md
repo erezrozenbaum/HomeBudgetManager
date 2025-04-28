@@ -30,21 +30,13 @@ A professional-grade personal finance management application that helps you trac
 
 ## Installation
 
-1. Download the latest release:
-   - [Windows Installer (64-bit)](https://github.com/erezrozenbaum/HomeBudgetManager/releases/download/v1.0.0/Home%20Budget%20Manager%20Setup%201.0.0.exe)
-   - [macOS DMG](https://github.com/erezrozenbaum/HomeBudgetManager/releases/latest/download/Home.Budget.Manager.dmg)
-   - [Linux AppImage](https://github.com/erezrozenbaum/HomeBudgetManager/releases/latest/download/Home.Budget.Manager.AppImage)
-
-2. Verify the installer (Windows):
-   - SHA-256: `3DD2242C718D602A884E4CEC98930C9B3BE4AC15F1A60CA4A82C0C68A108A0B5`
-   - You can verify the checksum using PowerShell:
-     ```powershell
-     Get-FileHash "Home Budget Manager Setup 1.0.0.exe" -Algorithm SHA256
-     ```
-
-3. Run the installer appropriate for your platform
-4. Follow the setup wizard
-5. Launch the application
+1. Download the latest release from our [releases page](https://github.com/erezrozenbaum/HomeBudgetManager/releases)
+2. Run the installer appropriate for your platform:
+   - Windows: Run the .exe installer
+   - macOS: Mount the .dmg and drag to Applications
+   - Linux: Make the AppImage executable and run
+3. Follow the setup wizard
+4. Launch the application
 
 ## Getting Started
 
@@ -75,7 +67,7 @@ A professional-grade personal finance management application that helps you trac
 
 ## Support
 
-For production support, please contact:
+For support, please contact:
 - Email: support@homebudgetmanager.com
 - Support Portal: https://support.homebudgetmanager.com
 - Documentation: https://docs.homebudgetmanager.com
@@ -101,7 +93,3 @@ This software is licensed under the MIT License. See [LICENSE](LICENSE) for deta
 ## Privacy Policy
 
 Your privacy is our priority. Read our [Privacy Policy](docs/PRIVACY.md) for details on how we handle your data.
-
-## Development
-
-For development setup and guidelines, please refer to [README.development.md](README.development.md)
