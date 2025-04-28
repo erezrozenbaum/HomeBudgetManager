@@ -41,7 +41,7 @@ try {
         window.ReactDOM = ReactDOM;
         
         // Load our app
-        require('../index.js');
+        require('./index.js');
     `;
     fs.writeFileSync(path.join(distDir, 'bundle.js'), bundleContent);
 
