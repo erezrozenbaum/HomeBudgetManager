@@ -10,11 +10,13 @@
     "test:coverage": "jest --coverage",
     "postinstall": "node scripts/install-prerequisites.js",
     "generate-icons": "node scripts/generate-icons.js",
+    "build:renderer": "node scripts/build-renderer.js",
+    "prebuild": "npm run build:renderer",
     "build": "electron-builder",
-    "build:win": "electron-builder --win",
-    "build:mac": "electron-builder --mac",
-    "build:linux": "electron-builder --linux",
-    "build:all": "electron-builder -mwl"
+    "build:win": "npm run prebuild && electron-builder --win",
+    "build:mac": "npm run prebuild && electron-builder --mac",
+    "build:linux": "npm run prebuild && electron-builder --linux",
+    "build:all": "npm run prebuild && electron-builder -mwl"
   },
   "author": "Erez Rozenbaum",
   "license": "MIT",
@@ -67,7 +69,10 @@
     "@electron/asar": "^3.2.8",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
+    "@types/electron": "^1.6.12",
     "@types/jest": "^29.5.12",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.17",
     "concurrently": "^8.2.2",
@@ -80,6 +85,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.35",
     "sharp": "^0.34.1",
+    "typescript": "^5.8.3",
     "vite": "^6.3.3"
   },
   "build": {
