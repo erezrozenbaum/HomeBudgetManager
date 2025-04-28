@@ -40,7 +40,7 @@ const TestCoverage = () => {
 
   const fetchCoverage = async () => {
     try {
-      const response = await fetch('/api/coverage');
+      const response = await fetch('http://localhost:3000/api/coverage');
       const data = await response.json();
       setCoverage(data);
     } catch (error) {

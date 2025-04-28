@@ -30,7 +30,7 @@ const Goals = () => {
 
   const fetchGoals = async () => {
     try {
-      const response = await fetch('/api/goals');
+      const response = await fetch('http://localhost:3000/api/goals');
       const data = await response.json();
       setGoals(data);
     } catch (error) {
@@ -41,7 +41,7 @@ const Goals = () => {
   const handleAddGoal = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/goals', {
+      const response = await fetch('http://localhost:3000/api/goals', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ const Goals = () => {
 
   const handleUpdateProgress = async (id, amount) => {
     try {
-      const response = await fetch(`/api/goals/${id}/progress`, {
+      const response = await fetch(`http://localhost:3000/api/goals/${id}/progress`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ const Goals = () => {
 
   const handleDeleteGoal = async (id) => {
     try {
-      const response = await fetch(`/api/goals/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/goals/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {

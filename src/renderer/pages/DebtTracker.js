@@ -38,7 +38,7 @@ const DebtTracker = () => {
 
   const fetchDebts = async () => {
     try {
-      const response = await fetch('/api/debts');
+      const response = await fetch('http://localhost:3000/api/debts');
       const data = await response.json();
       setDebts(data);
     } catch (error) {
@@ -49,7 +49,7 @@ const DebtTracker = () => {
   const handleAddDebt = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/debts', {
+      const response = await fetch('http://localhost:3000/api/debts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const DebtTracker = () => {
 
   const handleMakePayment = async (id, amount) => {
     try {
-      const response = await fetch(`/api/debts/${id}/payments`, {
+      const response = await fetch(`http://localhost:3000/api/debts/${id}/payments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const DebtTracker = () => {
 
   const handleDeleteDebt = async (id) => {
     try {
-      const response = await fetch(`/api/debts/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/debts/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {

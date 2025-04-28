@@ -42,7 +42,7 @@ const BillReminders = () => {
 
   const fetchBills = async () => {
     try {
-      const response = await fetch('/api/bills');
+      const response = await fetch('http://localhost:3000/api/bills');
       const data = await response.json();
       setBills(data);
     } catch (error) {
@@ -52,7 +52,7 @@ const BillReminders = () => {
 
   const fetchPaymentHistory = async () => {
     try {
-      const response = await fetch('/api/bills/history');
+      const response = await fetch('http://localhost:3000/api/bills/history');
       const data = await response.json();
       setPaymentHistory(data);
     } catch (error) {
@@ -63,7 +63,7 @@ const BillReminders = () => {
   const handleAddBill = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/bills', {
+      const response = await fetch('http://localhost:3000/api/bills', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const BillReminders = () => {
 
   const handleMarkAsPaid = async (id) => {
     try {
-      const response = await fetch(`/api/bills/${id}/pay`, {
+      const response = await fetch(`http://localhost:3000/api/bills/${id}/pay`, {
         method: 'POST',
       });
       if (response.ok) {
@@ -103,7 +103,7 @@ const BillReminders = () => {
 
   const handleDeleteBill = async (id) => {
     try {
-      const response = await fetch(`/api/bills/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/bills/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {

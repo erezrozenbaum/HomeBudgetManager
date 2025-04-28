@@ -12,7 +12,7 @@ function MigrationManager() {
 
   const fetchMigrations = async () => {
     try {
-      const response = await fetch('/api/migrations');
+      const response = await fetch('http://localhost:3000/api/migrations');
       const data = await response.json();
       setMigrations(data);
     } catch (error) {
@@ -24,7 +24,7 @@ function MigrationManager() {
     setIsRunning(true);
     setError(null);
     try {
-      const response = await fetch('/api/migrations/run', {
+      const response = await fetch('http://localhost:3000/api/migrations/run', {
         method: 'POST',
       });
       if (response.ok) {
@@ -41,7 +41,7 @@ function MigrationManager() {
 
   const rollbackMigration = async (migrationId) => {
     try {
-      const response = await fetch(`/api/migrations/${migrationId}/rollback`, {
+      const response = await fetch(`http://localhost:3000/api/migrations/${migrationId}/rollback`, {
         method: 'POST',
       });
       if (response.ok) {

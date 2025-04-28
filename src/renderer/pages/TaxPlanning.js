@@ -50,7 +50,7 @@ const TaxPlanning = () => {
 
   const fetchIncome = async () => {
     try {
-      const response = await fetch('/api/tax/income');
+      const response = await fetch('http://localhost:3000/api/tax/income');
       const data = await response.json();
       setIncome(data);
     } catch (error) {
@@ -60,7 +60,7 @@ const TaxPlanning = () => {
 
   const fetchDeductions = async () => {
     try {
-      const response = await fetch('/api/tax/deductions');
+      const response = await fetch('http://localhost:3000/api/tax/deductions');
       const data = await response.json();
       setDeductions(data);
     } catch (error) {
@@ -70,7 +70,7 @@ const TaxPlanning = () => {
 
   const fetchTaxBrackets = async () => {
     try {
-      const response = await fetch('/api/tax/brackets');
+      const response = await fetch('http://localhost:3000/api/tax/brackets');
       const data = await response.json();
       setTaxBrackets(data);
     } catch (error) {
@@ -81,7 +81,7 @@ const TaxPlanning = () => {
   const handleAddIncome = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/tax/income', {
+      const response = await fetch('http://localhost:3000/api/tax/income', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ const TaxPlanning = () => {
   const handleAddDeduction = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/tax/deductions', {
+      const response = await fetch('http://localhost:3000/api/tax/deductions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

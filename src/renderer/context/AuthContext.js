@@ -16,7 +16,7 @@ const AuthProvider = ({ children }) => {
 
   const checkSecurityStatus = async () => {
     try {
-      const response = await fetch('/api/auth/status');
+      const response = await fetch('http://localhost:3000/api/auth/status');
       const data = await response.json();
       setIsPasswordProtected(data.isPasswordProtected);
       setIsEncryptionEnabled(data.isEncryptionEnabled);
@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
 
   const setPassword = async (password) => {
     try {
-      const response = await fetch('/api/auth/set-password', {
+      const response = await fetch('http://localhost:3000/api/auth/set-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password })
@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
 
   const verifyPassword = async (password) => {
     try {
-      const response = await fetch('/api/auth/verify-password', {
+      const response = await fetch('http://localhost:3000/api/auth/verify-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password })
@@ -67,7 +67,7 @@ const AuthProvider = ({ children }) => {
 
   const setEncryption = async (key) => {
     try {
-      const response = await fetch('/api/auth/set-encryption', {
+      const response = await fetch('http://localhost:3000/api/auth/set-encryption', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key })
@@ -86,7 +86,7 @@ const AuthProvider = ({ children }) => {
 
   const disableEncryption = async () => {
     try {
-      const response = await fetch('/api/auth/disable-encryption', {
+      const response = await fetch('http://localhost:3000/api/auth/disable-encryption', {
         method: 'POST'
       });
       const data = await response.json();
@@ -103,7 +103,7 @@ const AuthProvider = ({ children }) => {
 
   const removePassword = async (currentPassword) => {
     try {
-      const response = await fetch('/api/auth/remove-password', {
+      const response = await fetch('http://localhost:3000/api/auth/remove-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ currentPassword })

@@ -33,7 +33,7 @@ function ImportExport() {
       formData.append('type', importType);
       formData.append('format', importFormat);
 
-      const response = await fetch('/api/import', {
+      const response = await fetch('http://localhost:3000/api/import', {
         method: 'POST',
         body: formData
       });
@@ -52,7 +52,7 @@ function ImportExport() {
     e.preventDefault();
     setExportStatus({ type: 'loading', message: 'Exporting data...' });
     try {
-      const response = await fetch(`/api/export?type=${exportType}&format=${exportFormat}`);
+      const response = await fetch(`http://localhost:3000/api/export?type=${exportType}&format=${exportFormat}`);
       if (!response.ok) throw new Error('Export failed');
 
       const blob = await response.blob();

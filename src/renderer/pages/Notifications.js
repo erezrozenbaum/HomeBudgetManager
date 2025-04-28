@@ -45,7 +45,7 @@ function Notifications() {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch('/api/notifications');
+      const response = await fetch('http://localhost:3000/api/notifications');
       const data = await response.json();
       setNotifications(data);
     } catch (error) {
@@ -55,7 +55,7 @@ function Notifications() {
 
   const fetchAlertSettings = async () => {
     try {
-      const response = await fetch('/api/notifications/settings');
+      const response = await fetch('http://localhost:3000/api/notifications/settings');
       const data = await response.json();
       setAlertSettings(data);
     } catch (error) {
@@ -65,7 +65,7 @@ function Notifications() {
 
   const handleMarkAsRead = async (id) => {
     try {
-      const response = await fetch(`/api/notifications/${id}/read`, {
+      const response = await fetch(`http://localhost:3000/api/notifications/${id}/read`, {
         method: 'PUT'
       });
       if (response.ok) {
@@ -78,7 +78,7 @@ function Notifications() {
 
   const handleDeleteNotification = async (id) => {
     try {
-      const response = await fetch(`/api/notifications/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/notifications/${id}`, {
         method: 'DELETE'
       });
       if (response.ok) {
@@ -92,7 +92,7 @@ function Notifications() {
   const handleUpdateSettings = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/notifications/settings', {
+      const response = await fetch('http://localhost:3000/api/notifications/settings', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

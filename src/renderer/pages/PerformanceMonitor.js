@@ -37,7 +37,7 @@ const PerformanceMonitor = () => {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const response = await fetch('/api/performance/metrics');
+        const response = await fetch('http://localhost:3000/api/performance/metrics');
         const data = await response.json();
         setMetrics(data);
       } catch (error) {

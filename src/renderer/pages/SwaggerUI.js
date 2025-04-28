@@ -18,7 +18,7 @@ const CustomSwaggerUI = () => {
 
   const fetchVersions = async () => {
     try {
-      const response = await fetch('/api/versions');
+      const response = await fetch('http://localhost:3000/api/versions');
       const data = await response.json();
       setVersions(data);
     } catch (error) {

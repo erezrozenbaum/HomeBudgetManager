@@ -52,7 +52,7 @@ const FinancialCalendar = () => {
   const handleAddEvent = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/calendar/events', {
+      const response = await fetch('http://localhost:3000/api/calendar/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

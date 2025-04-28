@@ -50,7 +50,7 @@ function NetWorth() {
 
   const fetchAssets = async () => {
     try {
-      const response = await fetch('/api/assets');
+      const response = await fetch('http://localhost:3000/api/assets');
       const data = await response.json();
       setAssets(data);
     } catch (error) {
@@ -60,7 +60,7 @@ function NetWorth() {
 
   const fetchLiabilities = async () => {
     try {
-      const response = await fetch('/api/liabilities');
+      const response = await fetch('http://localhost:3000/api/liabilities');
       const data = await response.json();
       setLiabilities(data);
     } catch (error) {
@@ -70,7 +70,7 @@ function NetWorth() {
 
   const fetchNetWorthHistory = async () => {
     try {
-      const response = await fetch('/api/net-worth/history');
+      const response = await fetch('http://localhost:3000/api/net-worth/history');
       const data = await response.json();
       setNetWorthHistory(data);
     } catch (error) {
@@ -81,7 +81,7 @@ function NetWorth() {
   const handleAddAsset = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/assets', {
+      const response = await fetch('http://localhost:3000/api/assets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ function NetWorth() {
   const handleAddLiability = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/liabilities', {
+      const response = await fetch('http://localhost:3000/api/liabilities', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ function NetWorth() {
 
   const handleDeleteAsset = async (id) => {
     try {
-      const response = await fetch(`/api/assets/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/assets/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {
@@ -144,7 +144,7 @@ function NetWorth() {
 
   const handleDeleteLiability = async (id) => {
     try {
-      const response = await fetch(`/api/liabilities/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/liabilities/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {

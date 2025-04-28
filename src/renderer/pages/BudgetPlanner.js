@@ -36,7 +36,7 @@ const BudgetPlanner = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/categories');
+      const response = await fetch('http://localhost:3000/api/categories');
       const data = await response.json();
       setCategories(data);
     } catch (error) {
@@ -47,7 +47,7 @@ const BudgetPlanner = () => {
   const handleAddBudget = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/budgets', {
+      const response = await fetch('http://localhost:3000/api/budgets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

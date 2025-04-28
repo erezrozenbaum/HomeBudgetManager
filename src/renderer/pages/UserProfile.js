@@ -39,7 +39,7 @@ const UserProfile = () => {
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/users/profile');
+      const response = await fetch('http://localhost:3000/api/users/profile');
       const data = await response.json();
       setUser(data);
     } catch (error) {
@@ -80,7 +80,7 @@ const UserProfile = () => {
       setError(null);
       setSuccess(null);
 
-      const response = await fetch('/api/users/profile', {
+      const response = await fetch('http://localhost:3000/api/users/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -118,7 +118,7 @@ const UserProfile = () => {
       setError(null);
       setSuccess(null);
 
-      const response = await fetch('/api/users/change-password', {
+      const response = await fetch('http://localhost:3000/api/users/change-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -149,7 +149,7 @@ const UserProfile = () => {
       setSaving(true);
       setError(null);
 
-      const response = await fetch('/api/users/delete', {
+      const response = await fetch('http://localhost:3000/api/users/delete', {
         method: 'DELETE'
       });
 

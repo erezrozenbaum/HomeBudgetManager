@@ -46,7 +46,7 @@ function HelpSupport() {
   const fetchFaqs = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/support/faqs');
+      const response = await fetch('http://localhost:3000/api/support/faqs');
       const data = await response.json();
       setFaqs(data);
     } catch (error) {
@@ -60,7 +60,7 @@ function HelpSupport() {
   const fetchTickets = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/support/tickets');
+      const response = await fetch('http://localhost:3000/api/support/tickets');
       const data = await response.json();
       setTickets(data);
     } catch (error) {
@@ -86,7 +86,7 @@ function HelpSupport() {
       setError(null);
       setSuccess(null);
 
-      const response = await fetch('/api/support/tickets', {
+      const response = await fetch('http://localhost:3000/api/support/tickets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -116,7 +116,7 @@ function HelpSupport() {
 
   const handleTicketStatusChange = async (ticketId, status) => {
     try {
-      const response = await fetch(`/api/support/tickets/${ticketId}/status`, {
+      const response = await fetch(`http://localhost:3000/api/support/tickets/${ticketId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

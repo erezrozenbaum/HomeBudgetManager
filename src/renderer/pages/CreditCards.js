@@ -23,7 +23,7 @@ function CreditCards() {
   const fetchCards = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/credit-cards');
+      const response = await fetch('http://localhost:3000/api/credit-cards');
       const data = await response.json();
       setCards(data);
     } catch (error) {
@@ -44,7 +44,7 @@ function CreditCards() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch('/api/credit-cards', {
+      const response = await fetch('http://localhost:3000/api/credit-cards', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ function CreditCards() {
     
     setLoading(true);
     try {
-      const response = await fetch(`/api/credit-cards/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/credit-cards/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {

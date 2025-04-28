@@ -25,7 +25,7 @@ const Settings = () => {
 
   useEffect(() => {
     // Fetch current settings from the API
-    fetch('/api/settings')
+    fetch('http://localhost:3000/api/settings')
       .then(response => response.json())
       .then(data => setSettings(data))
       .catch(error => console.error('Error fetching settings:', error));
@@ -64,7 +64,7 @@ const Settings = () => {
   const handleSaveSettings = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/settings', {
+      const response = await fetch('http://localhost:3000/api/settings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ const Settings = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('/api/import', {
+      const response = await fetch('http://localhost:3000/api/import', {
         method: 'POST',
         body: formData,
       });
@@ -111,7 +111,7 @@ const Settings = () => {
   const handleExportData = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/export');
+      const response = await fetch('http://localhost:3000/api/export');
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);

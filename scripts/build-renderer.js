@@ -7,9 +7,24 @@ function ensureDirectoryExists(dir) {
     }
 }
 
+function deleteDirectoryRecursive(dir) {
+    if (fs.existsSync(dir)) {
+        fs.readdirSync(dir).forEach((file) => {
+            const curPath = path.join(dir, file);
+            if (fs.lstatSync(curPath).isDirectory()) {
+                deleteDirectoryRecursive(curPath);
+            } else {
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(dir);
+    }
+}
+
 try {
-    // Ensure the dist directory exists
+    // Ensure a clean dist directory
     const distDir = path.join(__dirname, '../src/renderer/dist');
+    deleteDirectoryRecursive(distDir);
     ensureDirectoryExists(distDir);
 
     // Create a bundle that includes React and ReactDOM
@@ -58,6 +73,7 @@ try {
     ];
 
     dirsToCopy.forEach(dir => {
+        if (dir === 'dist') return; // Never copy dist into itself
         const sourceDir = path.join(__dirname, '../src/renderer', dir);
         const destDir = path.join(distDir, dir);
         if (fs.existsSync(sourceDir)) {
