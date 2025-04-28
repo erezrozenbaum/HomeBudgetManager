@@ -4,37 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
-    <title>My Budget Manager</title>
-    <script>
-        window.React = require('react');
-        window.ReactDOM = require('react-dom');
-        window.ReactRouterDOM = require('react-router-dom');
-    </script>
+    <title>Home Budget Manager</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <div id="root"></div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const { App } = require('./App');
-                const { BrowserRouter } = window.ReactRouterDOM;
-                
-                console.log('Initializing React app...');
-                
-                const app = window.React.createElement(BrowserRouter, null,
-                    window.React.createElement(App)
-                );
-                
-                window.ReactDOM.render(
-                    app,
-                    document.getElementById('root'),
-                    () => console.log('React app rendered successfully')
-                );
-            } catch (error) {
-                console.error('Failed to initialize React app:', error);
-            }
-        });
-    </script>
+    <script src="bundle.js"></script>
 </body>
 </html> 
