@@ -1,4 +1,4 @@
-const React = window.React;
+const React = require('react');
 const { createContext, useState, useEffect, useContext } = React;
 const { ipcRenderer } = require('electron');
 const { format, utcToZonedTime, zonedTimeToUtc } = require('date-fns-tz');

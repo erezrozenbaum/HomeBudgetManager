@@ -1,4 +1,4 @@
-const React = window.React;
+const React = require('react');
 const { createContext, useState, useContext, useEffect } = React;
 const { ipcRenderer } = require('electron');
 
