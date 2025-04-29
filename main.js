@@ -174,7 +174,7 @@ function createWindow() {
             responseHeaders: {
                 ...details.responseHeaders,
                 'Content-Security-Policy': [
-                    "default-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+                    "default-src 'self' http://localhost:* ws://localhost:*; " +
                     "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
                     "style-src 'self' 'unsafe-inline'; " +
                     "img-src 'self' data:; " +
@@ -305,6 +305,20 @@ app.on('window-all-closed', () => {
 // Local API setup
 localApi.use(express.json());
 
+// Auth endpoints
+localApi.get('/api/auth/status', (req, res) => {
+  try {
+    // For now, return default auth status
+    res.json({
+      isAuthenticated: true,
+      user: null,
+      isPasswordProtected: false
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Example API endpoint
 localApi.get('/api/accounts', (req, res) => {
   try {
@@ -373,7 +387,7 @@ ipcMain.handle('security:verifyPassword', async (event, password) => {
 });
 
 // Add theme handlers
-ipcMain.handle('get-theme', async () => {
+ipcMain.handle('get-system-theme', async () => {
   try {
     // For now, return default theme
     return 'light';
