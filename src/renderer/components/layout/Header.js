@@ -1,6 +1,6 @@
 const React = window.React;
 const { Link } = require('react-router-dom');
-const { useAuth } = require('../../contexts/AuthContext');
+const { useAuth } = require('../../context/AuthContext');
 
 const Header = () => {
   const { user, logout } = useAuth();
