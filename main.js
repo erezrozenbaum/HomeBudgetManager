@@ -162,7 +162,7 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-            enableRemoteModule: false,
+            enableRemoteModule: true,
             webSecurity: true,
             allowRunningInsecureContent: false
         }
@@ -178,7 +178,8 @@ function createWindow() {
                     "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
                     "style-src 'self' 'unsafe-inline'; " +
                     "img-src 'self' data:; " +
-                    "connect-src 'self' http://localhost:* ws://localhost:*"
+                    "connect-src 'self' http://localhost:* ws://localhost:* data: blob:; " +
+                    "font-src 'self' data:;"
                 ]
             }
         });
@@ -334,4 +335,84 @@ ipcMain.handle('auth:login', async (event, credentials) => {
 ipcMain.handle('auth:logout', async () => {
   // TODO: Implement logout
   return true;
+});
+
+// Add security handlers
+ipcMain.handle('security:checkStatus', async () => {
+  try {
+    // For now, return default values
+    return {
+      passwordProtected: false,
+      encryptionEnabled: false,
+      isAuthenticated: true
+    };
+  } catch (error) {
+    console.error('Error checking security status:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('security:setPassword', async (event, password) => {
+  try {
+    // TODO: Implement password setting
+    return true;
+  } catch (error) {
+    console.error('Error setting password:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('security:verifyPassword', async (event, password) => {
+  try {
+    // TODO: Implement password verification
+    return true;
+  } catch (error) {
+    console.error('Error verifying password:', error);
+    throw error;
+  }
+});
+
+// Add theme handlers
+ipcMain.handle('get-theme', async () => {
+  try {
+    // For now, return default theme
+    return 'light';
+  } catch (error) {
+    console.error('Error getting theme:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('set-theme', async (event, theme) => {
+  try {
+    // TODO: Implement theme setting
+    return true;
+  } catch (error) {
+    console.error('Error setting theme:', error);
+    throw error;
+  }
+});
+
+// Add timezone handlers
+ipcMain.handle('get-timezone-preferences', async () => {
+  try {
+    // For now, return default timezone
+    return {
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      format24Hour: true
+    };
+  } catch (error) {
+    console.error('Error getting timezone preferences:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('set-timezone-preferences', async (event, preferences) => {
+  try {
+    // TODO: Implement timezone preferences setting
+    return true;
+  } catch (error) {
+    console.error('Error setting timezone preferences:', error);
+    throw error;
+  }
 }); 
