@@ -4,6 +4,7 @@ const { BrowserRouter } = require('react-router-dom');
 const { AuthProvider } = require('./context/AuthContext');
 const { ThemeProvider } = require('./context/ThemeContext');
 const { TimezoneProvider } = require('./context/TimezoneContext');
+const { SecurityProvider } = require('./context/SecurityContext');
 const { App } = require('./App');
 
 // Error boundary for the root component
@@ -45,15 +46,19 @@ if (!container) {
                 BrowserRouter,
                 null,
                 React.createElement(
-                    AuthProvider,
+                    SecurityProvider,
                     null,
                     React.createElement(
-                        ThemeProvider,
+                        AuthProvider,
                         null,
                         React.createElement(
-                            TimezoneProvider,
+                            ThemeProvider,
                             null,
-                            React.createElement(App)
+                            React.createElement(
+                                TimezoneProvider,
+                                null,
+                                React.createElement(App)
+                            )
                         )
                     )
                 )
