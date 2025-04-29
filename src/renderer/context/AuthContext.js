@@ -16,10 +16,10 @@ const AuthProvider = ({ children }) => {
 
   const checkSecurityStatus = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/status');
-      const data = await response.json();
-      setIsPasswordProtected(data.isPasswordProtected);
-      setIsEncryptionEnabled(data.isEncryptionEnabled);
+      const status = await ipcRenderer.invoke('auth:checkStatus');
+      setIsPasswordProtected(status.isPasswordProtected);
+      setIsEncryptionEnabled(status.isEncryptionEnabled);
+      setIsAuthenticated(status.isAuthenticated);
       setIsLoading(false);
     } catch (error) {
       console.error('Error checking security status:', error);
@@ -29,17 +29,12 @@ const AuthProvider = ({ children }) => {
 
   const setPassword = async (password) => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/set-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-      const data = await response.json();
-      if (response.ok) {
+      const result = await ipcRenderer.invoke('auth:setPassword', password);
+      if (result) {
         setIsPasswordProtected(true);
         return true;
       }
-      throw new Error(data.error);
+      return false;
     } catch (error) {
       console.error('Error setting password:', error);
       return false;
@@ -48,13 +43,8 @@ const AuthProvider = ({ children }) => {
 
   const verifyPassword = async (password) => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/verify-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-      const data = await response.json();
-      if (data.isValid) {
+      const result = await ipcRenderer.invoke('auth:verifyPassword', password);
+      if (result) {
         setIsAuthenticated(true);
         return true;
       }
@@ -67,17 +57,12 @@ const AuthProvider = ({ children }) => {
 
   const setEncryption = async (key) => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/set-encryption', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key })
-      });
-      const data = await response.json();
-      if (response.ok) {
+      const result = await ipcRenderer.invoke('auth:setEncryption', key);
+      if (result) {
         setIsEncryptionEnabled(true);
         return true;
       }
-      throw new Error(data.error);
+      return false;
     } catch (error) {
       console.error('Error setting encryption:', error);
       return false;
@@ -86,15 +71,12 @@ const AuthProvider = ({ children }) => {
 
   const disableEncryption = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/disable-encryption', {
-        method: 'POST'
-      });
-      const data = await response.json();
-      if (response.ok) {
+      const result = await ipcRenderer.invoke('auth:disableEncryption');
+      if (result) {
         setIsEncryptionEnabled(false);
         return true;
       }
-      throw new Error(data.error);
+      return false;
     } catch (error) {
       console.error('Error disabling encryption:', error);
       return false;
@@ -103,18 +85,13 @@ const AuthProvider = ({ children }) => {
 
   const removePassword = async (currentPassword) => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/remove-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPassword })
-      });
-      const data = await response.json();
-      if (response.ok) {
+      const result = await ipcRenderer.invoke('auth:removePassword', currentPassword);
+      if (result) {
         setIsPasswordProtected(false);
         setIsAuthenticated(false);
         return true;
       }
-      throw new Error(data.error);
+      return false;
     } catch (error) {
       console.error('Error removing password:', error);
       return false;

@@ -336,37 +336,21 @@ localApi.listen(PORT, () => {
 });
 
 // Handle IPC messages
-ipcMain.handle('auth:get-current-user', async () => {
-  // TODO: Implement user authentication
-  return null;
-});
-
-ipcMain.handle('auth:login', async (event, credentials) => {
-  // TODO: Implement login
-  return null;
-});
-
-ipcMain.handle('auth:logout', async () => {
-  // TODO: Implement logout
-  return true;
-});
-
-// Add security handlers
-ipcMain.handle('security:checkStatus', async () => {
+ipcMain.handle('auth:checkStatus', async () => {
   try {
     // For now, return default values
     return {
-      passwordProtected: false,
-      encryptionEnabled: false,
-      isAuthenticated: true
+      isAuthenticated: true,
+      isPasswordProtected: false,
+      isEncryptionEnabled: false
     };
   } catch (error) {
-    console.error('Error checking security status:', error);
+    console.error('Error checking auth status:', error);
     throw error;
   }
 });
 
-ipcMain.handle('security:setPassword', async (event, password) => {
+ipcMain.handle('auth:setPassword', async (event, password) => {
   try {
     // TODO: Implement password setting
     return true;
@@ -376,12 +360,42 @@ ipcMain.handle('security:setPassword', async (event, password) => {
   }
 });
 
-ipcMain.handle('security:verifyPassword', async (event, password) => {
+ipcMain.handle('auth:verifyPassword', async (event, password) => {
   try {
     // TODO: Implement password verification
     return true;
   } catch (error) {
     console.error('Error verifying password:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('auth:setEncryption', async (event, key) => {
+  try {
+    // TODO: Implement encryption setting
+    return true;
+  } catch (error) {
+    console.error('Error setting encryption:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('auth:disableEncryption', async () => {
+  try {
+    // TODO: Implement encryption disabling
+    return true;
+  } catch (error) {
+    console.error('Error disabling encryption:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('auth:removePassword', async (event, currentPassword) => {
+  try {
+    // TODO: Implement password removal
+    return true;
+  } catch (error) {
+    console.error('Error removing password:', error);
     throw error;
   }
 });
