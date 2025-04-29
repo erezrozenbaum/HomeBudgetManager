@@ -12,7 +12,7 @@ const ThemeProvider = ({ children }) => {
     // Load saved theme preference
     const loadTheme = async () => {
       try {
-        const savedTheme = await ipcRenderer.invoke('get-theme');
+        const savedTheme = await ipcRenderer.invoke('get-system-theme');
         const systemTheme = await ipcRenderer.invoke('get-system-theme');
         setTheme(savedTheme || 'light');
         setSystemTheme(systemTheme);
