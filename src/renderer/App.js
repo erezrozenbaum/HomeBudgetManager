@@ -51,58 +51,60 @@ const App = () => {
                 path: '/security-settings',
                 element: React.createElement(SecuritySettings)
             }),
-            React.createElement(
-                ProtectedRoute,
-                { isAuthenticated, isPasswordProtected },
-                React.createElement(
-                    MainLayout,
-                    null,
+            React.createElement(Route, {
+                element: React.createElement(ProtectedRoute, { isAuthenticated, isPasswordProtected }),
+                children: [
                     React.createElement(Route, {
-                        path: '/',
-                        element: React.createElement(Dashboard)
-                    }),
-                    React.createElement(Route, {
-                        path: '/bank-accounts',
-                        element: React.createElement(BankAccounts)
-                    }),
-                    React.createElement(Route, {
-                        path: '/credit-cards',
-                        element: React.createElement(CreditCards)
-                    }),
-                    React.createElement(Route, {
-                        path: '/transactions',
-                        element: React.createElement(Transactions)
-                    }),
-                    React.createElement(Route, {
-                        path: '/investments',
-                        element: React.createElement(Investments)
-                    }),
-                    React.createElement(Route, {
-                        path: '/goals',
-                        element: React.createElement(Goals)
-                    }),
-                    React.createElement(Route, {
-                        path: '/loans',
-                        element: React.createElement(Loans)
-                    }),
-                    React.createElement(Route, {
-                        path: '/insurances',
-                        element: React.createElement(Insurances)
-                    }),
-                    React.createElement(Route, {
-                        path: '/businesses',
-                        element: React.createElement(Businesses)
-                    }),
-                    React.createElement(Route, {
-                        path: '/ai-advisor',
-                        element: React.createElement(AIAdvisor)
-                    }),
-                    React.createElement(Route, {
-                        path: '/settings',
-                        element: React.createElement(Settings)
+                        element: React.createElement(MainLayout),
+                        children: [
+                            React.createElement(Route, {
+                                path: '/',
+                                element: React.createElement(Dashboard)
+                            }),
+                            React.createElement(Route, {
+                                path: '/bank-accounts',
+                                element: React.createElement(BankAccounts)
+                            }),
+                            React.createElement(Route, {
+                                path: '/credit-cards',
+                                element: React.createElement(CreditCards)
+                            }),
+                            React.createElement(Route, {
+                                path: '/transactions',
+                                element: React.createElement(Transactions)
+                            }),
+                            React.createElement(Route, {
+                                path: '/investments',
+                                element: React.createElement(Investments)
+                            }),
+                            React.createElement(Route, {
+                                path: '/goals',
+                                element: React.createElement(Goals)
+                            }),
+                            React.createElement(Route, {
+                                path: '/loans',
+                                element: React.createElement(Loans)
+                            }),
+                            React.createElement(Route, {
+                                path: '/insurances',
+                                element: React.createElement(Insurances)
+                            }),
+                            React.createElement(Route, {
+                                path: '/businesses',
+                                element: React.createElement(Businesses)
+                            }),
+                            React.createElement(Route, {
+                                path: '/ai-advisor',
+                                element: React.createElement(AIAdvisor)
+                            }),
+                            React.createElement(Route, {
+                                path: '/settings',
+                                element: React.createElement(Settings)
+                            })
+                        ]
                     })
-                )
-            )
+                ]
+            })
         )
     );
 };
